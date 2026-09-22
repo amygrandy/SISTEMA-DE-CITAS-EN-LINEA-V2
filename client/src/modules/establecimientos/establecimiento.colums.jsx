@@ -1,11 +1,9 @@
 export const columns = [
   {
-    accessorKey: 'idestablecimiento',
-    header: 'ID SIAIS (idestablecimiento)',
+    id: 'numero',
+    header: 'N',
     cell: ({ row }) => (
-      <span className="font-semibold text-[#005B57]">
-        {row.original.idestablecimiento}
-      </span>
+      <span className="font-semibold text-[#005B57]">{row.index + 1}</span>
     ),
   },
   {

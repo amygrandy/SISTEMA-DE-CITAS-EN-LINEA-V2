@@ -164,4 +164,20 @@ export class ConsultorioRepository {
     }
     return data;
   }
+  static async getSelectByIdEstablecimiento({
+    establecimiento_id,
+    transaction = null,
+  }) {
+    const data = await ConsultorioModel.findAll({
+      attributes: [
+        ['idCuaderno', 'value'],
+        ['nombre_consultorio', 'label'],
+      ],
+      where: {
+        fk_idestablecimiento: establecimiento_id,
+      },
+      raw: true,
+    });
+    return data;
+  }
 }

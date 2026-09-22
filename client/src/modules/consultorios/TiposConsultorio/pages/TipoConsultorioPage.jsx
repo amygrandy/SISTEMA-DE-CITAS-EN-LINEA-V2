@@ -15,11 +15,13 @@ import TipoConsultorioModal from './TipoConsultorioModal.jsx';
 export default function TipoConsultorioPage() {
   const [filas, setFilas] = useState([]);
   const [search, setSearch] = useState('');
+  const [loadingTable, setLoadingTable] = useState(false);
   const [loading, setLoading] = useState(false);
   const { closeModal, isModalOpen, modalState, openModal } = useModalManager();
 
   const dataLoad = useCallback(async () => {
     try {
+      setLoadingTable(true);
       const response = await services.getAll();
       setFilas(Array.isArray(response.data) ? response.data : []);
     } catch (e) {
@@ -29,6 +31,7 @@ export default function TipoConsultorioPage() {
         return toast.error('Ocurrio un error inesperado intentelo mas tarde');
       }
     } finally {
+      setLoadingTable(false);
     }
   }, []);
 
@@ -101,7 +104,11 @@ export default function TipoConsultorioPage() {
           </button>
         </div>
 
-        <DataTable columns={columns} data={filasFiltradas} />
+        <DataTable
+          columns={columns}
+          data={filasFiltradas}
+          loading={loadingTable}
+        />
       </div>
       <TipoConsultorioModal
         open={isModalOpen(MODALS.CREATE)}

@@ -17,8 +17,8 @@ export const menu = [
     end: true,
   },
   {
-    nombre: 'ESTABLECIMIENTO SIAIS',
-    path: '/admin/socios',
+    nombre: 'ESTABLECIMIENTO',
+    path: '/admin/establecimientos',
     icon: CalendarDaysIcon,
   },
   {
@@ -26,29 +26,29 @@ export const menu = [
     path: '/admin/consultorios',
     icon: UserGroupIcon,
   },
-  {
-    nombre: 'GESTION DE TIPOS DE CONSULTORIOS',
-    path: '/admin/medicos',
-    icon: UsersIcon,
-  },
-  {
-    nombre: 'Especialidades',
-    path: '/admin/especialidades',
-    icon: ClipboardDocumentListIcon,
-  },
-  {
-    nombre: 'Establecimientos',
-    path: '/admin/establecimientos',
-    icon: BuildingOffice2Icon,
-  },
-  {
-    nombre: 'Reportes',
-    path: '/admin/reportes',
-    icon: DocumentChartBarIcon,
-  },
-  {
-    nombre: 'Configuración',
-    path: '/admin/configuracion',
-    icon: Cog6ToothIcon,
-  },
+  // {
+  //   nombre: 'GESTION DE TIPOS DE CONSULTORIOS',
+  //   path: '/admin/medicos',
+  //   icon: UsersIcon,
+  // },
+  // {
+  //   nombre: 'Especialidades',
+  //   path: '/admin/especialidades',
+  //   icon: ClipboardDocumentListIcon,
+  // },
+  // {
+  //   nombre: 'Establecimientos',
+  //   path: '/admin/establecimientos',
+  //   icon: BuildingOffice2Icon,
+  // },
+  // {
+  //   nombre: 'Reportes',
+  //   path: '/admin/reportes',
+  //   icon: DocumentChartBarIcon,
+  // },
+  // {
+  //   nombre: 'Configuración',
+  //   path: '/admin/configuracion',
+  //   icon: Cog6ToothIcon,
+  // },
 ];

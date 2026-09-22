@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import { ZonificacionConsultorioController } from './ZonificacionConsultorio.controller.js';
+import { EstablecimientoController } from '../establecimiento/establecimiento.controller.js';
+import { ConsultorioController } from '../consultorio/consultorio.controller.js';
 import {
   validateRequest,
   idParamSchema,
@@ -11,6 +13,12 @@ const routes = new Router();
 
 routes
   .get('/', asyncHandler(ZonificacionConsultorioController.getAll))
+  .get('/establecimiento', asyncHandler(EstablecimientoController.getSelect))
+  .get(
+    '/consultorio/:id',
+    validateRequest({ paramsSchema: idParamSchema }),
+    asyncHandler(ConsultorioController.getSelectByIdEstablecimiento),
+  )
   .get(
     '/:id',
     validateRequest({ paramsSchema: idParamSchema }),

@@ -17,8 +17,8 @@ function App() {
         <Route path="/paciente" element={<SacarFichaMedica />} />
         <Route path="/ejemplo" element={<AdminCNS />} />
         <Route path="/admin" element={<AdminLayaout />}>
-          <Route index element={<Navigate to="socios" replace />} />
-          <Route path="socios" element={<EstablecimientoPage />} />
+          <Route index element={<Navigate to="establecimientos" replace />} />
+          <Route path="establecimientos" element={<EstablecimientoPage />} />
           <Route path="consultorios" element={<ConsultorioTab />} />
         </Route>
       </Routes>

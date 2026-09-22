@@ -25,7 +25,7 @@ export async function ConnectBD() {
     // await TipoConsultorioModel.sync({ alter: true });
     // await ConsultorioModel.sync({ alter: true });
 
-    await ZodificacionConsultorioModel.sync({ alter: true });
+    // await ZodificacionConsultorioModel.sync({ alter: true });
 
     console.log('✅ SE CARGO CORRECTAMENTE LAS TABLAS');
   } catch (e) {

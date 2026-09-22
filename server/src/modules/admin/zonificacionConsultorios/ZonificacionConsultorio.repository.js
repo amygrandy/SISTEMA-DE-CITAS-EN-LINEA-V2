@@ -1,6 +1,7 @@
 import { col, Op } from 'sequelize';
 import { ZodificacionConsultorioModel } from '../../../models/zonificacionConsultorio.model.js';
 import { ConsultorioModel } from '../../../models/consultorio.model.js';
+import { EstablecimientoModel } from '../../../models/establecimiento.model.js';
 
 export class ZonificacionConsultorioRepository {
   static async getAll() {
@@ -54,7 +55,25 @@ export class ZonificacionConsultorioRepository {
         {
           model: ConsultorioModel,
           as: 'consultorioCabecera',
-          attributes: { exclude: ['createdAt', 'updatedAt'] },
+          attributes: {
+            exclude: [
+              'createdAt',
+              'updatedAt',
+              'fk_idestablecimiento',
+              'tipo_consultorio_id',
+              'estado',
+              'nombre_consultorio',
+            ],
+          },
+          include: [
+            {
+              model: EstablecimientoModel,
+              as: 'establecimientoConsultorio',
+              attributes: {
+                exclude: ['createdAt', 'updatedAt', 'nombre_establecimiento'],
+              },
+            },
+          ],
         },
         {
           model: ConsultorioModel,
@@ -67,6 +86,8 @@ export class ZonificacionConsultorioRepository {
       },
       transaction,
     });
+    return data;
+
     const agrupado = Object.values(
       data.reduce((acc, item) => {
         const row = item.toJSON();

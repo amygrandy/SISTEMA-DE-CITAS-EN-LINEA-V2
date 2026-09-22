@@ -28,6 +28,9 @@ export const ConsultorioModel = sequelize.define(
       },
     },
     nombre_consultorio: { type: DataTypes.STRING, allowNull: false },
+
+    limite_fichas_diarias: { type: DataTypes.INTEGER, defaultValue: 0 },
+
     estado: { type: DataTypes.BOOLEAN, defaultValue: true },
   },
   { tableName: 'consultorios', timestamps: true },

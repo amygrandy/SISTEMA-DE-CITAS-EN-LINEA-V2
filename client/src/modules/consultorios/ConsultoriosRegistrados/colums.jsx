@@ -2,6 +2,7 @@ import {
   PencilSquareIcon,
   CheckCircleIcon,
   NoSymbolIcon,
+  Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 export const getColumns = ({ onEditar, onChangeStatus }) => [
   {
@@ -71,6 +72,26 @@ export const getColumns = ({ onEditar, onChangeStatus }) => [
 
       return (
         <div className="flex items-center gap-2">
+          {/* CONFIGURACIONES */}
+          <button
+            type="button"
+            onClick={() => onEditar(row.original)}
+            className="
+            inline-flex items-center gap-2
+            rounded-lg border border-slate-200
+            bg-white px-3 py-2
+            text-sm font-medium text-slate-700
+            shadow-sm
+            transition-all duration-200
+            hover:border-slate-300 hover:bg-slate-50
+            hover:text-slate-900
+            focus:outline-none focus:ring-2
+            focus:ring-slate-300
+          "
+          >
+            <Cog6ToothIcon className="h-4 w-4" />
+            CONFIGURACION
+          </button>
           {/* EDITAR */}
           <button
             type="button"

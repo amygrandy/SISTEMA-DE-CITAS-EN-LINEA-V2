@@ -10,6 +10,7 @@ import Tabs from '../../components/Tabs';
 import ConsultoriosRegistrados from './ConsultoriosRegistrados/page/ConsultoriosRegistrados';
 import ConsultorioPage from './ConsultoriosSIAIS/pages/ConsultorioPage';
 import TipoConsultorioPage from './TiposConsultorio/pages/TipoConsultorioPage';
+import ZonificacionPage from './zonificacion/pages/ZonificacionPage';
 
 const tabs = [
   {
@@ -24,14 +25,10 @@ const tabs = [
   },
   {
     label: 'ZONIFICAR CONSULTORIOS',
-    value: 'TipoConsultorioPage12',
+    value: 'ZonificacionPage',
     icon: XCircleIcon,
   },
-  {
-    label: 'MEDICOS POR CONSULTORIO SIAIS',
-    value: 'activos',
-    icon: CheckCircleIcon,
-  },
+
   {
     label: 'CONSULTORIOS SIAIS',
     value: 'ConsultorioPage',
@@ -52,6 +49,8 @@ export default function ConsultoriosTab() {
         {activeTab === 'ConsultorioPage' && <ConsultorioPage />}
 
         {activeTab === 'TipoConsultorioPage' && <TipoConsultorioPage />}
+
+        {activeTab === 'ZonificacionPage' && <ZonificacionPage />}
       </div>
     </div>
   );

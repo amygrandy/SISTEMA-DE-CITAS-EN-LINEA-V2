@@ -5,6 +5,7 @@ import { CreateUseCase } from './use-case/create.use-case.js';
 import { GetAllUseCase } from './use-case/get-all.use-case.js';
 import { ChangeTipoConsultorioUseCase } from './use-case/changeTipoConsultorio.use-case.js';
 import { ChangeStatusUseCase } from './use-case/change-status.use-case.js';
+import { GetSelectByIdEstablecimientoUseCase } from './use-case/get-select-id-establecimiento.use-case.js';
 
 export class ConsultorioController {
   static async getAll(req, res) {
@@ -73,6 +74,16 @@ export class ConsultorioController {
     return res.status(200).json({
       ok: true,
       message: 'Se cambio el estado correctamente el cosultorio',
+      data,
+    });
+  }
+  static async getSelectByIdEstablecimiento(req, res) {
+    const data = await GetSelectByIdEstablecimientoUseCase.execute({
+      establecimiento_id: req.params.id,
+    });
+    return res.status(200).json({
+      ok: true,
+      message: 'Se obtuvo correctamente los cosultorios',
       data,
     });
   }
