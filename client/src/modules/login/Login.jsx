@@ -1,5 +1,6 @@
 import { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
+import { LoginServices } from './login.services';
 import {
   CalendarDaysIcon,
   CheckCircleIcon,
@@ -7,19 +8,53 @@ import {
   EyeSlashIcon,
   IdentificationIcon,
   LockClosedIcon,
-  ShieldCheckIcon,
   TicketIcon,
   UserIcon,
 } from '@heroicons/react/24/outline';
+import { toast } from 'react-toastify';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Login() {
+  const { login } = useAuth();
   const [showCedula, setShowCedula] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Más adelante conectaremos aquí tu API.
-    console.log('Iniciar sesión');
+    try {
+      setLoading(true);
+
+      const formData = new FormData(event.currentTarget);
+      const matricula = formData.get('matricula');
+      const cedula = formData.get('cedula');
+
+      const response = await LoginServices.InicioSesion({
+        payload: {
+          nombre_usuario: matricula,
+          contrasenia: cedula,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(response.message || 'Credenciales incorrectos');
+      }
+
+      localStorage.setItem('token', response.data.token);
+      login(response.data.usuario);
+      if (response.data.usuario.rol == 'paciente') {
+        navigate('/paciente');
+      }
+    } catch (e) {
+      if (e instanceof Error) {
+        return toast.error(e.message || 'Credenciales incorrectos');
+      } else {
+        return toast.error('Algo salio mal, intentelo mas tarde');
+      }
+    } finally {
+      setLoading(true);
+    }
   };
 
   return (

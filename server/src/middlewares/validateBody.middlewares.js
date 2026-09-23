@@ -1,3 +1,4 @@
+import { ZodError } from 'zod';
 export const validateBody = (schema) => {
   return (req, res, next) => {
     try {

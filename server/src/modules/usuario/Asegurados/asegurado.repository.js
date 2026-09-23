@@ -18,10 +18,11 @@ class AseguradoRepository {
             hp.idpoblacion,
             LTRIM(RTRIM(haa.pac_nro_asegurado)) AS pac_nro_asegurado,
             LTRIM(RTRIM(haa.pac_codigo)) AS pac_codigo,
-            LTRIM(RTRIM(hp.pac_nombre)) AS nombres,
-            LTRIM(RTRIM(hp.pac_primer_apellido)) AS apellido_paterno,
-            LTRIM(RTRIM(hp.pac_segundo_apellido)) AS apellido_materno,
-            LTRIM(RTRIM(hp.pac_documento_id)) AS cedula_identidad
+            LTRIM(RTRIM(hp.pac_nombre)) +' '+
+            LTRIM(RTRIM(hp.pac_primer_apellido)) +' '+
+            LTRIM(RTRIM(hp.pac_segundo_apellido)) as nombre_completo,
+            LTRIM(RTRIM(hp.pac_documento_id)) AS cedula_identidad,
+            LTRIM(RTRIM(haa.parentesco)) AS parentesco
         FROM bdhistoriasclinicas.dbo.hcl_poblacion_afiliacion hpa
         INNER JOIN bdhistoriasclinicas.dbo.hcl_cuaderno hc 
             ON hpa.idcuaderno = hc.idCuaderno
