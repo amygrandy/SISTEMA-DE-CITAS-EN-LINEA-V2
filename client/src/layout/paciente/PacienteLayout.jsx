@@ -19,7 +19,6 @@ export default function PacienteLayout() {
 function Header() {
   const [open, setOpen] = useState(false);
   const { usuario, logout } = useAuth();
-  console.log(usuario);
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">

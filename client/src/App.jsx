@@ -15,6 +15,11 @@ import UsuarioNormaRoute from './routes/UsuarioNormaRoute';
 //
 import PacienteLayout from './layout/paciente/PacienteLayout';
 import FamiliaPage from './modules/paciente/page/familia/page/FamiliaPage';
+import HistorialPage from './modules/paciente/page/historial/page/HistorialPage';
+
+import PanelInformativo from './layout/ejemplo/PanelInformativo';
+import PerfilPage from './layout/ejemplo/perfil/PerfilPage';
+import ServiciosDisponiblesPage from './layout/ejemplo/citas/ServiciosDisponiblesPage';
 
 function App() {
   return (
@@ -22,7 +27,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         {/* <Route path="/paciente" element={<SacarFichaMedica />} /> */}
-        <Route path="/ejemplo" element={<AdminCNS />} />
+        <Route path="/ejemplo" element={<ServiciosDisponiblesPage />} />
         <Route path="/admin" element={<AdminLayaout />}>
           <Route index element={<Navigate to="establecimientos" replace />} />
           <Route path="establecimientos" element={<EstablecimientoPage />} />
@@ -33,6 +38,7 @@ function App() {
             <Route path="/paciente" element={<PacienteLayout />}>
               <Route index element={<Navigate to="familia" replace />} />
               <Route path="familia" element={<FamiliaPage />} />
+              <Route path="historial" element={<HistorialPage />} />
             </Route>
           </Route>
         </Route>

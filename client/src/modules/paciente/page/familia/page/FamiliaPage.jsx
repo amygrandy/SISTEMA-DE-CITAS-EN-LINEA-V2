@@ -46,15 +46,24 @@ export default function FamiliaPage() {
   }, []);
 
   const seleccionarPersona = (persona) => {
-    navigate(`/portal/paciente/${persona.id}`);
+    console.log(persona);
+    navigate(`/paciente/historial`, {
+      state: {
+        persona,
+      },
+    });
   };
 
   const abrirHistorial = (persona) => {
-    navigate(`/portal/paciente/${persona.id}/historial`);
+    navigate(`/paciente/historial`, {
+      state: {
+        persona,
+      },
+    });
   };
 
   const reservarFicha = (persona) => {
-    navigate(`/portal/paciente/${persona.id}/reservar`);
+    navigate(`/paciente/historial`);
   };
 
   return (
