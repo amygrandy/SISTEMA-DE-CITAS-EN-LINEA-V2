@@ -18,8 +18,16 @@ import FamiliaPage from './modules/paciente/page/familia/page/FamiliaPage';
 import HistorialPage from './modules/paciente/page/historial/page/HistorialPage';
 
 import PanelInformativo from './layout/ejemplo/PanelInformativo';
-import PerfilPage from './layout/ejemplo/perfil/PerfilPage';
+//import PerfilPage from './layout/ejemplo/perfil/PerfilPage';
 import ServiciosDisponiblesPage from './layout/ejemplo/citas/ServiciosDisponiblesPage';
+//
+import PacienteLayaout from './layout/pacienteFichas/Pacientes.layaout';
+import PanelInformativoPage from './modules/paciente/page/panelInformativo/PanelInformativoPage';
+import PerfilPage from './modules/paciente/page/perfil/PerfilPage';
+import BeneficiariosPage from './modules/paciente/page/beneficiarios/BeneficiariosPage';
+import AgendaMedica from './modules/paciente/page/agendaMedica/inicio/page/AgendaMedica';
+import EstablecimientosPage from './modules/paciente/page/Establecimientos/EstablecimientosPage';
+import EspecialidadesPage from './modules/paciente/page/agendaMedica/especialidades/page/EspecialidadesPage';
 
 function App() {
   return (
@@ -35,10 +43,25 @@ function App() {
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route element={<UsuarioNormaRoute />}>
-            <Route path="/paciente" element={<PacienteLayout />}>
-              <Route index element={<Navigate to="familia" replace />} />
+            <Route path="/paciente" element={<PacienteLayaout />}>
+              <Route
+                index
+                element={<Navigate to="panel-informativo" replace />}
+              />
+              <Route
+                path="panel-informativo"
+                element={<PanelInformativoPage />}
+              />
+              <Route path="perfil" element={<PerfilPage />} />
               <Route path="familia" element={<FamiliaPage />} />
               <Route path="historial" element={<HistorialPage />} />
+              <Route path="beneficiario" element={<BeneficiariosPage />} />
+              <Route path="agenda-medica" element={<AgendaMedica />} />{' '}
+              <Route path="especialidades" element={<EspecialidadesPage />} />
+              <Route
+                path="centros-medicos"
+                element={<EstablecimientosPage />}
+              />
             </Route>
           </Route>
         </Route>

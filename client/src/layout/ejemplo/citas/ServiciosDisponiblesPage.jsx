@@ -55,29 +55,30 @@ export default function ServiciosDisponiblesPage() {
       {/* BODY */}
       <div
         className={`
-          grid min-h-[calc(100vh-64px)]
-          gap-6 p-6
+    grid min-h-[calc(100vh-64px)]
+    gap-6 p-6
+    transition-[grid-template-columns] duration-300 ease-in-out
 
-          ${
-            sidebarOpen
-              ? 'lg:grid-cols-[285px_minmax(0,1fr)]'
-              : 'lg:grid-cols-1'
-          }
-        `}
+    ${
+      sidebarOpen
+        ? 'lg:grid-cols-[285px_minmax(0,1fr)]'
+        : 'lg:grid-cols-[0px_minmax(0,1fr)]'
+    }
+  `}
       >
         {/* SIDEBAR */}
         <aside
           className={`
-            hidden overflow-hidden lg:block
-            transition-all duration-300 ease-in-out
-            ${
-              sidebarOpen
-                ? 'w-64 translate-x-0 opacity-100'
-                : 'w-0 -translate-x-full opacity-0'
-            }
-        `}
+      hidden overflow-hidden lg:block
+      transition-all duration-300 ease-in-out
+      ${
+        sidebarOpen
+          ? 'translate-x-0 opacity-100'
+          : '-translate-x-full opacity-0'
+      }
+    `}
         >
-          <div className="w-64">
+          <div className="w-71.25">
             <Sidebar />
           </div>
         </aside>
