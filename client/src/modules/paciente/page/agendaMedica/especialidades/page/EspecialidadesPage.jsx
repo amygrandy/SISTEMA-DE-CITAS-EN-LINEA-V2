@@ -1,14 +1,13 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CalendarDaysIcon,
   ClipboardDocumentCheckIcon,
   ClipboardDocumentListIcon,
-  UserGroupIcon,
-  HeartIcon,
-  AcademicCapIcon,
   ArrowLeftIcon,
 } from '@heroicons/react/24/outline';
 import ServiceCard from '../../../../components/ServiceCard';
+import SeleccionarPaciente from '../../../../components/SeleccionarPaciente';
 
 const servicios = [
   {
@@ -17,7 +16,6 @@ const servicios = [
     description: 'Agenda tu cita con tu médico de cabecera',
     icon: CalendarDaysIcon, // 📅 calendario → agendar
     variant: 'green',
-    path: '/agenda-medica/citas',
   },
   {
     id: 2,
@@ -25,7 +23,6 @@ const servicios = [
     description: 'Reserva y gestiona tus citas odontológicas',
     icon: ClipboardDocumentCheckIcon, // ✅ check → confirmar reserva
     variant: 'blue',
-    path: '/agenda-medica/programaciones',
   },
   {
     id: 3,
@@ -33,16 +30,30 @@ const servicios = [
     description: 'Consulta el historial de tus citas con especialistas',
     icon: ClipboardDocumentListIcon, // 📋 lista → historial
     variant: 'green',
-    path: '/agenda-medica/historial',
   },
 ];
 
+const handleIrEspecialidad = (id) => {
+  switch (id) {
+    case 1:
+      console.log('Medicina familiar');
+      break;
+    case 2:
+      console.log('Medicina odontologca');
+      break;
+    case 3:
+      console.log('Medicina familiar');
+      break;
+    default:
+  }
+};
+
 export default function EspecialidadesPage() {
+  const [selectId, setSelectId] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
   return (
     <>
-      {' '}
-      {/* CONTENIDO */}
       <main className="flex min-w-0 flex-col">
         <div className="flex justify-between">
           {/* TÍTULO */}
@@ -80,29 +91,34 @@ export default function EspecialidadesPage() {
           className="
                   mt-5 rounded-2xl bg-white
                   p-6
-                  shadow-[0_1px_3px_rgba(15,23,42,0.04)]
-                "
+                  shadow-[0_1px_3px_rgba(15,23,42,0.04)]"
         >
           <div
             className="
                     grid gap-6
                     md:grid-cols-2
-                    xl:grid-cols-3
-                  "
+                    xl:grid-cols-3"
           >
             {servicios.map((servicio) => (
               <ServiceCard
+                id={servicio.id}
                 key={servicio.id}
                 title={servicio.title}
                 description={servicio.description}
                 icon={servicio.icon}
                 variant={servicio.variant}
-                onClick={() => navigate(servicio.path)}
+                onClick={() => setSelectId(id)}
               />
             ))}
           </div>
         </section>
       </main>
+      <SeleccionarPaciente
+        open={openModal}
+        onClose={() => {
+          setOpenModal(false);
+        }}
+      />
     </>
   );
 }

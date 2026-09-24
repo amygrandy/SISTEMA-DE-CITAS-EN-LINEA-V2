@@ -25,7 +25,7 @@ export default function AgendaMedicaLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-[#e8eeee]">
+    <div className="min-h-screen overflow-hidden  bg-[#e8eeee]">
       <Header onMenu={toggleSidebar} />
 
       {/* SIDEBAR MOBILE */}
@@ -73,19 +73,19 @@ export default function AgendaMedicaLayout() {
       {/* BODY */}
       <div
         className={`
-          grid min-h-[calc(100vh-64px)]
-          gap-6 p-4
-          sm:p-6
+    grid h-[calc(100dvh-64px)] min-h-0
+    gap-6 overflow-hidden
+    p-4 sm:p-6
 
-          transition-[grid-template-columns]
-          duration-300 ease-in-out
+    transition-[grid-template-columns]
+    duration-300 ease-in-out
 
-          ${
-            desktopSidebarOpen
-              ? 'lg:grid-cols-[285px_minmax(0,1fr)]'
-              : 'lg:grid-cols-[0px_minmax(0,1fr)]'
-          }
-        `}
+    ${
+      desktopSidebarOpen
+        ? 'lg:grid-cols-[285px_minmax(0,1fr)]'
+        : 'lg:grid-cols-[0px_minmax(0,1fr)]'
+    }
+  `}
       >
         {/* SIDEBAR DESKTOP */}
         <aside
@@ -105,7 +105,7 @@ export default function AgendaMedicaLayout() {
           </div>
         </aside>
 
-        <main className="flex min-w-0 flex-col">
+        <main className="min-h-0 min-w-0 overflow-y-auto">
           <Outlet />
         </main>
       </div>

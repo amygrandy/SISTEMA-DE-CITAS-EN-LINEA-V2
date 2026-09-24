@@ -28,6 +28,7 @@ import BeneficiariosPage from './modules/paciente/page/beneficiarios/Beneficiari
 import AgendaMedica from './modules/paciente/page/agendaMedica/inicio/page/AgendaMedica';
 import EstablecimientosPage from './modules/paciente/page/Establecimientos/EstablecimientosPage';
 import EspecialidadesPage from './modules/paciente/page/agendaMedica/especialidades/page/EspecialidadesPage';
+import SeleccionarFechaHoraPage from './modules/paciente/page/agendaMedica/especialidades/page/SeleccionarFechaHoraPage';
 
 function App() {
   return (
@@ -58,6 +59,10 @@ function App() {
               <Route path="beneficiario" element={<BeneficiariosPage />} />
               <Route path="agenda-medica" element={<AgendaMedica />} />{' '}
               <Route path="especialidades" element={<EspecialidadesPage />} />
+              <Route
+                path="seleccionar-fecha"
+                element={<SeleccionarFechaHoraPage />}
+              />
               <Route
                 path="centros-medicos"
                 element={<EstablecimientosPage />}

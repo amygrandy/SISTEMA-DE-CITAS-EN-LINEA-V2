@@ -1,6 +1,7 @@
 import { CheckIcon } from '@heroicons/react/24/outline';
 
 export default function ServiceCard({
+  id,
   title,
   description,
   icon: Icon,
@@ -69,7 +70,9 @@ export default function ServiceCard({
       {/* BOTÓN */}
       <button
         type="button"
-        onClick={onClick}
+        onClick={() => {
+          onClick(id);
+        }}
         className={`
         relative mt-8 flex w-full items-center justify-center
         rounded px-4 py-2.5

@@ -39,7 +39,7 @@ export default function PerfilPage() {
   ];
 
   return (
-    <main className="w-full min-w-0">
+    <main className="w-full min-w-0 ">
       <div
         className="
           min-h-full w-full min-w-0
@@ -47,8 +47,7 @@ export default function PerfilPage() {
           p-4 shadow-sm
           sm:p-5
           md:p-6
-          lg:p-7
-        "
+          lg:p-7"
       >
         {/* TÍTULO */}
         <div className="mb-4 min-w-0">
@@ -58,11 +57,10 @@ export default function PerfilPage() {
 
           <p
             className="
-              mt-1 break-words
+              mt-1 wrap-break-word
               text-base font-semibold text-slate-500
               sm:text-lg
-              lg:text-xl
-            "
+              lg:text-xl"
           >
             {perfil.nombreCompleto}
           </p>
@@ -87,9 +85,9 @@ export default function PerfilPage() {
               <EmpresaCard data={empresa} />
             </div>
 
-            <div className="min-w-0">
+            {/* <div className="min-w-0">
               <PlanillaAportesCard data={planillas} />
-            </div>
+            </div> */}
           </div>
 
           {/* COLUMNA DERECHA */}
