@@ -52,12 +52,6 @@ export default function DatosPersonalesCard({ data }) {
               label="Regional"
               value={data?.regional}
             />
-
-            <InfoItem
-              icon={CheckCircleIcon}
-              label="Estado Afiliación"
-              value={data?.estadoAfiliacion}
-            />
           </div>
 
           {/* COLUMNA DERECHA */}

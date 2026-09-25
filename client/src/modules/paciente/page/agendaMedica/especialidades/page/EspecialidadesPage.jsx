@@ -107,7 +107,7 @@ export default function EspecialidadesPage() {
                 description={servicio.description}
                 icon={servicio.icon}
                 variant={servicio.variant}
-                onClick={() => setSelectId(id)}
+                onClick={() => setSelectId(servicio.id)}
               />
             ))}
           </div>

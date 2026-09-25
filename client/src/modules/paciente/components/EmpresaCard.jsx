@@ -56,23 +56,6 @@ export default function EmpresaCard({ data }) {
               value={data?.numeroPatronal}
             />
           </div>
-
-          <div className="min-w-0">
-            <InfoItem
-              icon={CheckCircleIcon}
-              label="Estado"
-              value={data?.estado}
-            />
-          </div>
-        </div>
-
-        {/* ÚLTIMO APORTE */}
-        <div className="min-w-0">
-          <InfoItem
-            icon={CalendarDaysIcon}
-            label="Último mes aporte"
-            value={data?.ultimoMesAporte}
-          />
         </div>
       </div>
     </section>
