@@ -33,25 +33,30 @@ const servicios = [
   },
 ];
 
-const handleIrEspecialidad = (id) => {
-  switch (id) {
-    case 1:
-      console.log('Medicina familiar');
-      break;
-    case 2:
-      console.log('Medicina odontologca');
-      break;
-    case 3:
-      console.log('Medicina familiar');
-      break;
-    default:
-  }
-};
-
 export default function EspecialidadesPage() {
-  const [selectId, setSelectId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+
+  const handleIrEspecialidad = (id) => {
+    switch (id) {
+      case 1:
+        setOpenModal(true);
+        break;
+      case 2:
+        console.log('Medicina odontologca');
+        break;
+      case 3:
+        console.log('Medicina especialidad');
+        break;
+      default:
+    }
+  };
+
+  const handleMedicinaFamiliar = (asegurado) => {
+    navigate('/paciente/seleccionar-fecha', {
+      state: { ...asegurado, tipo: 'MEDICINA FAMILIAR' },
+    });
+  };
   return (
     <>
       <main className="flex min-w-0 flex-col">
@@ -107,7 +112,7 @@ export default function EspecialidadesPage() {
                 description={servicio.description}
                 icon={servicio.icon}
                 variant={servicio.variant}
-                onClick={() => setSelectId(servicio.id)}
+                onClick={() => handleIrEspecialidad(servicio.id)}
               />
             ))}
           </div>
@@ -118,6 +123,7 @@ export default function EspecialidadesPage() {
         onClose={() => {
           setOpenModal(false);
         }}
+        onConfirm={handleMedicinaFamiliar}
       />
     </>
   );

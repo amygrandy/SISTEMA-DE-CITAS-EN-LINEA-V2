@@ -14,7 +14,6 @@ export default function SeleccionarPaciente({ open, onClose, onConfirm }) {
   const [pacienteSeleccionado, setPacienteSeleccionado] = useState(null);
   const [familiares, setFamiliares] = useState([]);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const dataLoad = async () => {
@@ -22,6 +21,7 @@ export default function SeleccionarPaciente({ open, onClose, onConfirm }) {
         if (!open) return;
         setLoading(true);
         const response = await FamiliarServices.getSelect();
+
         if (!response.ok) {
           throw new Error(
             response.message || 'No se pudo obtener los familiares',
@@ -40,41 +40,6 @@ export default function SeleccionarPaciente({ open, onClose, onConfirm }) {
     };
     dataLoad();
   }, [open]);
-
-  const pacientesEjemplo = [
-    {
-      id: 1,
-      nombreCompleto: 'ELVIS LUIS CHAVEZ TORREZ',
-      parentesco: 'Titular',
-      ci: '4454925 CB',
-      matricula: '1025487',
-      estado: 'ACTIVO',
-    },
-    {
-      id: 2,
-      nombreCompleto: 'MARÍA FERNANDA CHAVEZ ROJAS',
-      parentesco: 'Hija',
-      ci: '8456123 CB',
-      matricula: '1025488',
-      estado: 'ACTIVO',
-    },
-    {
-      id: 3,
-      nombreCompleto: 'ANA LUCÍA TORREZ VARGAS',
-      parentesco: 'Esposa',
-      ci: '6987451 CB',
-      matricula: '1025489',
-      estado: 'ACTIVO',
-    },
-    {
-      id: 4,
-      nombreCompleto: 'LUIS ALBERTO CHAVEZ ROJAS',
-      parentesco: 'Hijo',
-      ci: '7412589 CB',
-      matricula: '1025490',
-      estado: 'ACTIVO',
-    },
-  ];
 
   const seleccionarPaciente = (paciente) => {
     setPacienteSeleccionado(paciente);

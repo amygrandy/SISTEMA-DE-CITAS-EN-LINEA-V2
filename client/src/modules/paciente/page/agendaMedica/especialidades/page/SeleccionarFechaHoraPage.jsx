@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   UserIcon,
   IdentificationIcon,
@@ -16,18 +16,20 @@ export default function SeleccionarFechaHora() {
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
   const [horaSeleccionada, setHoraSeleccionada] = useState(null);
 
+  const navigate = useNavigate();
+  const { state } = useLocation();
+
   const asegurado = {
-    nombreCompleto: 'ELVIS LUIS CHAVEZ TORREZ',
-    ci: '4454925 CB',
+    nombreCompleto: state?.nombre_completo || '',
+    ci: state?.cedula_identidad || '',
   };
 
   const establecimiento = {
-    nombre: 'CIMFA POLICLINICO QUILLACOLLO',
-    direccion: 'C. Cleómedes Blanco esq. Av. Aroma',
+    nombre: state.establecieminto || '',
   };
 
   const consultorio = {
-    nombre: 'MEDICINA FAMILIAR',
+    nombre: state.consultorio || '',
   };
 
   const fechas = [
@@ -206,12 +208,6 @@ export default function SeleccionarFechaHora() {
             tone="sky"
           >
             <p className="font-bold text-slate-800">{establecimiento.nombre}</p>
-
-            <div className="mt-2 flex items-start gap-2 text-sm leading-5 text-slate-500">
-              <MapPinIcon className="mt-0.5 h-4 w-4 shrink-0" />
-
-              <span>{establecimiento.direccion}</span>
-            </div>
           </InfoCard>
 
           {/* CONSULTORIO */}
@@ -220,7 +216,7 @@ export default function SeleccionarFechaHora() {
 
             <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
               <CheckIcon className="h-4 w-4" />
-              Seleccionado
+              {state?.tipo}
             </div>
           </InfoCard>
         </div>

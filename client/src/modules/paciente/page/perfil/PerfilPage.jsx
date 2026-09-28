@@ -1,45 +1,71 @@
+import { useEffect, useState } from 'react';
 import DatosPersonalesCard from '../../components/DatosPersonalesCard';
 import EmpresaCard from '../../components/EmpresaCard';
 import CentroMedicoCard from '../../components/CentroMedicoCard';
-import PlanillaAportesCard from '../../components/PlanillaAportesCard';
+import { toast } from 'react-toastify';
+import { PerfilService } from './perfil.services';
 
 export default function PerfilPage() {
-  const perfil = {
-    nombreCompleto: 'ELVIS LUIS CHAVEZ TORREZ',
-    foto: '/images/perfil.jpg',
-    ci: '4454925 CB',
-    direccion: 'COCHABAMBA / Colcapirhua / Sumumpaya AGUA DE CASTILLA SN',
-    regional: 'COCHABAMBA',
-    estadoAfiliacion: 'ACTIVO',
-    fechaNacimiento: '06/08/1980',
-    tipoSeguro: 'PATRONAL (Seguro Obligatorio)',
-    numeroReferencia: 'Sin registro',
-    fechaAfiliacion: '08/09/2026',
-  };
+  const [loading, setLoading] = useState(true);
+  const [perfil, setPerfil] = useState({});
+  const [empresa, setEmpresa] = useState({});
+  const [centroMedico, setCentroMedico] = useState({});
 
-  const empresa = {
-    razonSocial: 'CAJA NACIONAL DE SALUD',
-    numeroPatronal: '02-730-00031',
-    estado: 'AL DÍA',
-    ultimoMesAporte: '',
-  };
+  useEffect(() => {
+    const dataLoad = async () => {
+      try {
+        setLoading(true);
 
-  const centroMedico = {
-    centroMedico: 'CIMFA POLICLINICO QUILLACOLLO',
-    consultorio: 'FISIATRIA',
-  };
+        const response = await PerfilService.getPerfilAsegurado();
+        if (!response.ok) {
+          throw new Error(response.message || 'No se pudo obtener el perfil ');
+        }
 
-  const planillas = [
-    {
-      id: 1,
-      razonSocial: 'CAJA NACIONAL DE SALUD',
-      gestion: '2026',
-      periodo: 'AGOSTO',
-    },
-  ];
+        setPerfil(response.data.perfil ?? {});
+        setEmpresa(response.data.empresa ?? {});
+        setCentroMedico(response.data.centroMedico ?? {});
+      } catch (e) {
+        if (e instanceof Error) {
+          toast.error(e.message || 'No se pudo obtener el perfil');
+        } else {
+          toast.error('Algo salió mal, inténtelo más tarde');
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    dataLoad();
+  }, []);
+
+  if (loading) {
+    return (
+      <main className="flex min-h-[60vh] w-full items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div
+            className="
+              h-12 w-12
+              animate-spin
+              rounded-full
+              border-4 border-slate-200
+              border-t-[#064135]
+            "
+          />
+
+          <div className="text-center">
+            <p className="font-semibold text-slate-700">Cargando perfil</p>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Obteniendo información del asegurado...
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <main className="w-full min-w-0 ">
+    <main className="w-full min-w-0">
       <div
         className="
           min-h-full w-full min-w-0
@@ -47,7 +73,8 @@ export default function PerfilPage() {
           p-4 shadow-sm
           sm:p-5
           md:p-6
-          lg:p-7"
+          lg:p-7
+        "
       >
         {/* TÍTULO */}
         <div className="mb-4 min-w-0">
@@ -60,7 +87,8 @@ export default function PerfilPage() {
               mt-1 wrap-break-word
               text-base font-semibold text-slate-500
               sm:text-lg
-              lg:text-xl"
+              lg:text-xl
+            "
           >
             {perfil.nombreCompleto}
           </p>
@@ -84,10 +112,6 @@ export default function PerfilPage() {
             <div className="min-w-0">
               <EmpresaCard data={empresa} />
             </div>
-
-            {/* <div className="min-w-0">
-              <PlanillaAportesCard data={planillas} />
-            </div> */}
           </div>
 
           {/* COLUMNA DERECHA */}
