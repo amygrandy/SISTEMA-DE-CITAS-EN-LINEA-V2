@@ -27,9 +27,11 @@ export const ConsultorioModel = sequelize.define(
         key: 'id',
       },
     },
+
     nombre_consultorio: { type: DataTypes.STRING, allowNull: false },
 
-    limite_fichas_diarias: { type: DataTypes.INTEGER, defaultValue: 0 },
+    cantidad_fichas_por_dia: { type: DataTypes.INTEGER, allowNull: false },
+    dias_anticipacion: { type: DataTypes.INTEGER, allowNull: false },
 
     estado: { type: DataTypes.BOOLEAN, defaultValue: true },
   },

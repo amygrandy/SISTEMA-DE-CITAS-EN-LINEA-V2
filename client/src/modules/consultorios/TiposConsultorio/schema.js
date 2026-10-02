@@ -1,5 +1,5 @@
 import z from 'zod';
-import { reqString, reqBoolean } from '../../../validators/zod.js';
+import { reqString, reqBoolean, reqInteger } from '../../../validators/zod.js';
 
 export const TipoConsultorioSchema = z.object({
   nombre_tipo: reqString({

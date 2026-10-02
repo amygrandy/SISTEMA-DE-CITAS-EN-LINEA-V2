@@ -6,6 +6,7 @@ import { MODALS, useModalManager } from '../../../../hooks/useModalManager';
 
 import ConsultorioRegistradosModal from './ConsultorioRegistradosModal';
 import ConsultorioCambioTipoModal from './ConsultorioCambioTipoModal';
+import ConfiguracionFichasModal from '../components/ConfiguracionFichasModal';
 import { ConsultorioServices as services } from '../services';
 import { getColumns } from '../colums';
 import { toast } from 'react-toastify';
@@ -55,11 +56,15 @@ export default function ConsultoriosRegistradosPage() {
   const handleChangeTipoConsultorio = (row) => {
     openModal(MODALS.EDIT, row);
   };
+  const handleConfiguration = (id) => {
+    openModal(MODALS.CONFIGURATION, id);
+  };
   const columns = useMemo(
     () =>
       getColumns({
         onEditar: handleChangeTipoConsultorio,
         onChangeStatus: handelChangeStatus,
+        onConfiguraciones: handleConfiguration,
       }),
     [],
   );
@@ -122,6 +127,13 @@ export default function ConsultoriosRegistradosPage() {
         onTable={dataLoad}
         id={modalState.data?.idCuaderno}
         tipo_consultorio={modalState.data?.tipo_consultorio}
+      />
+      <ConfiguracionFichasModal
+        isEdit={true}
+        id={modalState.data}
+        open={isModalOpen(MODALS.CONFIGURATION)}
+        onClose={closeModal}
+        onSave={() => {}}
       />
     </div>
   );

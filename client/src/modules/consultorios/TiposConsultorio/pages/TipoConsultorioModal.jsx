@@ -167,6 +167,7 @@ export default function tipoConsultorioModal({
               onClick={() => {
                 onClose();
                 setForm(initialForm());
+                setError({});
               }}
               className="rounded-xl border border-slate-300 px-6 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
             >

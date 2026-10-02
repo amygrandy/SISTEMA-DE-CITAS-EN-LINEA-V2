@@ -135,7 +135,7 @@ export default function SelectableList({
 function LoadingList() {
   return (
     <div className="divide-y divide-slate-100">
-      {[1, 2, 3, 4].map((item) => (
+      {[1, 2, 3, 4, 5].map((item) => (
         <div
           key={item}
           className="flex animate-pulse items-center gap-4 px-4 py-4"

@@ -4,7 +4,7 @@ import {
   NoSymbolIcon,
   Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
-export const getColumns = ({ onEditar, onChangeStatus }) => [
+export const getColumns = ({ onEditar, onChangeStatus, onConfiguraciones }) => [
   {
     id: 'numero',
     header: 'N',
@@ -30,6 +30,17 @@ export const getColumns = ({ onEditar, onChangeStatus }) => [
       <div>
         <p className="font-semibold text-slate-800">
           {row.original.nombre_consultorio}
+        </p>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'cantidad_fichas_por_dia',
+    header: 'FICHAS POR DIA',
+    cell: ({ row }) => (
+      <div>
+        <p className="font-semibold text-slate-800">
+          {row.original.cantidad_fichas_por_dia}
         </p>
       </div>
     ),
@@ -75,7 +86,7 @@ export const getColumns = ({ onEditar, onChangeStatus }) => [
           {/* CONFIGURACIONES */}
           <button
             type="button"
-            onClick={() => onEditar(row.original)}
+            onClick={() => onConfiguraciones(row.original.idCuaderno)}
             className="
             inline-flex items-center gap-2
             rounded-lg border border-slate-200

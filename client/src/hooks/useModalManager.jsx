@@ -8,6 +8,7 @@ export const MODALS = {
   VIEW: 'VIEW',
   CONFIRM: 'CONFIRM',
   STATUS: 'STATUS',
+  CONFIGURATION: 'CONFIGURATION',
 };
 
 export function useModalManager() {

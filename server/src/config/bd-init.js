@@ -9,6 +9,11 @@ import { ConsultorioModel } from '../models/consultorio.model.js';
 import { TipoConsultorioModel } from '../models/tipoConsultorio.model.js';
 import { ZodificacionConsultorioModel } from '../models/zonificacionConsultorio.model.js';
 
+import {
+  consultorioDiaSemanaModel,
+  diaSemanaModel,
+} from '../models/diaSemana.model.js';
+
 export async function ConnectBD() {
   try {
     console.log('🌐 Conectando a la base de datos PostgreSQL...');
@@ -21,11 +26,14 @@ export async function ConnectBD() {
     // await UsuarioModel.sync({ alter: true });
 
     // await EstablecimientoModel.sync({ alter: true });
-    //
-    // await TipoConsultorioModel.sync({ alter: true });
-    // await ConsultorioModel.sync({ alter: true });
+
+    await TipoConsultorioModel.sync({ alter: true });
+    await ConsultorioModel.sync({ alter: true });
 
     // await ZodificacionConsultorioModel.sync({ alter: true });
+
+    // await diaSemanaModel.sync({ alter: true });
+    // await consultorioDiaSemanaModel.sync({ alter: true });
 
     console.log('✅ SE CARGO CORRECTAMENTE LAS TABLAS');
   } catch (e) {

@@ -6,6 +6,8 @@ import { GetAllUseCase } from './use-case/get-all.use-case.js';
 import { ChangeTipoConsultorioUseCase } from './use-case/changeTipoConsultorio.use-case.js';
 import { ChangeStatusUseCase } from './use-case/change-status.use-case.js';
 import { GetSelectByIdEstablecimientoUseCase } from './use-case/get-select-id-establecimiento.use-case.js';
+import { GetConfigurationById } from './use-case/get-id-configuration.use-case.js';
+import { updateConfigurationByIdUseCase } from './use-case/update-configurarion-id.use-case.js';
 
 export class ConsultorioController {
   static async getAll(req, res) {
@@ -84,6 +86,29 @@ export class ConsultorioController {
     return res.status(200).json({
       ok: true,
       message: 'Se obtuvo correctamente los cosultorios',
+      data,
+    });
+  }
+  static async getConfigurationById(req, res) {
+    const data = await GetConfigurationById.execute({
+      id: req.validated.params.id,
+    });
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Se obtuvo la configuracion correctamente',
+      data,
+    });
+  }
+  static async updateConfiguracionById(req, res) {
+    const data = await updateConfigurationByIdUseCase.execute({
+      id: req.validated.params.id,
+      payload: req.validated.body,
+    });
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Configuracion correctamente actualizado',
       data,
     });
   }

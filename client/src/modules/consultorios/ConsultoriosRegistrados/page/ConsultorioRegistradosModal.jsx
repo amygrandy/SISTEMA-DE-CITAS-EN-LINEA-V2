@@ -4,41 +4,37 @@ import {
   BuildingOffice2Icon,
   MagnifyingGlassIcon,
   CheckIcon,
+  Cog6ToothIcon,
   ChevronRightIcon,
-  UserGroupIcon,
-  HeartIcon,
 } from '@heroicons/react/24/outline';
 
 import { ConsultorioServices } from '../services';
 import { toast } from 'react-toastify';
 import ConfirmModal from '../../../../components/ConfirmModal';
+import SelectableList from '../../../../components/SelectableList';
+import ConfiguracionFichasModal from '../components/ConfiguracionFichasModal';
+import { MODALS, useModalManager } from '../../../../hooks/useModalManager';
 
 export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
+  const { closeModal, isModalOpen, modalState, openModal } = useModalManager();
+
   const [establecimientoId, setEstablecimientoId] = useState(null);
   const [consultorioId, setConsultorioId] = useState(null);
   const [tipoConsultorioId, setTipoConsultorioId] = useState(null);
-
-  const [searchEstablecimiento, setSearchEstablecimiento] = useState('');
-  const [searchConsultorio, setSearchConsultorio] = useState('');
-
+  const [configuracion, setConfiguracion] = useState(null);
   //
   const [dataEstablecimiento, setDataEstablecimiento] = useState([]);
+  const [loadingEstablecimiento, setLoadingEstablecimiento] = useState(false);
+  //
   const [dataCosutorio, setDataConsultorio] = useState([]);
+  const [loadingConsultorio, setLoadingConsultorio] = useState(false);
+  //
   const [dataTipoConsulotorio, setDataTipoConsultorio] = useState([]);
-
+  const [loadingTipoConsultorio, setLoadingTipoConsultorio] = useState(false);
   //
 
-  const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const establecimientosFiltrados = dataEstablecimiento.filter((item) =>
-    item.label.toLowerCase().includes(searchEstablecimiento.toLowerCase()),
-  );
-
-  const consultoriosFiltrados =
-    dataCosutorio?.filter((item) =>
-      item.label.toLowerCase().includes(searchConsultorio.toLowerCase()),
-    ) ?? [];
+  //
 
   const seleccionarEstablecimiento = (id) => {
     setEstablecimientoId(id);
@@ -50,6 +46,7 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
 
   const seleccionarConsultorio = (id) => {
     setConsultorioId(id);
+    setTipoConsultorioId(null);
   };
 
   const continuar = async () => {
@@ -64,6 +61,7 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
         tipo_consultorio_id: tipoConsultorioId,
         idCuaderno: consultoriosFiltrados.value,
         nombre_consultorio: consultoriosFiltrados.label,
+        ...configuracion,
       };
 
       const response = await ConsultorioServices.create(data);
@@ -78,11 +76,11 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
       setEstablecimientoId(null);
       setConsultorioId(null);
       setTipoConsultorioId(null);
-      setOpenModal(false);
+      closeModal();
       onTable();
       onClose();
     } catch (e) {
-      setOpenModal(false);
+      closeModal();
       if (e instanceof Error) {
         return toast.error(e.message || 'No se pudo guardar los datos');
       } else {
@@ -100,12 +98,14 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
     setEstablecimientoId(null);
     setConsultorioId(null);
     setTipoConsultorioId(null);
+    closeModal();
     onClose();
   };
   useEffect(() => {
     const dataLoad = async () => {
       try {
         if (!open) return;
+        setLoadingEstablecimiento(true);
 
         const response = await ConsultorioServices.getSelectEstablecimientos();
 
@@ -126,6 +126,8 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
         } else {
           return toast.error('Intentelo mas tarde');
         }
+      } finally {
+        setLoadingEstablecimiento(false);
       }
     };
     dataLoad();
@@ -135,7 +137,7 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
     const dataLoad = async () => {
       try {
         if (!open) return;
-
+        setLoadingConsultorio(true);
         const response = await ConsultorioServices.getSelectSiais({
           establecimiento_id: establecimientoId,
         });
@@ -146,6 +148,8 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
         } else {
           return toast.error('Algo salio mal intentelo mas tarde');
         }
+      } finally {
+        setLoadingConsultorio(false);
       }
     };
     dataLoad();
@@ -155,7 +159,7 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
     const dataLoad = async () => {
       try {
         if (!open) return;
-
+        setLoadingTipoConsultorio(true);
         const response = await ConsultorioServices.getSelecTipoConsultorio();
 
         setDataTipoConsultorio(
@@ -167,15 +171,20 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
         } else {
           return toast.error('Algo salio mal intentelo mas tarde');
         }
+      } finally {
+        setLoadingTipoConsultorio(false);
       }
     };
     dataLoad();
   }, [consultorioId]);
 
+  const handleConfiguration = (payload) => {
+    setConfiguracion(payload);
+  };
   if (!open) return null;
 
   const puedeContinuar =
-    establecimientoId && consultorioId && tipoConsultorioId;
+    establecimientoId && consultorioId && tipoConsultorioId && configuracion;
 
   return (
     <>
@@ -238,179 +247,31 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
           {/* BODY */}
           <div className="grid flex-1 gap-7 overflow-y-auto px-7 py-7 lg:grid-cols-3">
             {/* ESTABLECIMIENTO */}
-            <section>
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-slate-900">
-                  1. Seleccione el establecimiento
-                </h3>
+            <SelectableList
+              title="1. SELECCIONE UN ESTABLECIMIENTO"
+              items={dataEstablecimiento}
+              value={establecimientoId}
+              onChange={seleccionarEstablecimiento}
+              searchPlaceholder="Buscar establecimiento..."
+              loading={loadingEstablecimiento}
+            />
 
-                <p className="mt-1 text-sm text-slate-500">
-                  Elija el establecimiento de salud donde desea atenderse.
-                </p>
-              </div>
+            <SelectableList
+              title="2. SELECCIONE UN CONSULTORIO"
+              items={dataCosutorio}
+              value={consultorioId}
+              onChange={seleccionarConsultorio}
+              searchPlaceholder="Buscar consultorio..."
+              loading={loadingConsultorio}
+            />
 
-              <SearchInput
-                value={searchEstablecimiento}
-                onChange={setSearchEstablecimiento}
-                placeholder="Buscar establecimiento..."
-              />
-
-              <div className="mt-4 max-h-91.25 overflow-x-hidden overflow-y-auto rounded-2xl border border-slate-200">
-                {establecimientosFiltrados.map((item) => (
-                  <button
-                    key={item.value}
-                    type="button"
-                    onClick={() => seleccionarEstablecimiento(item.value)}
-                    className={`flex w-full items-center gap-4 border-b border-slate-100 px-4 py-4 text-left transition last:border-none ${
-                      establecimientoId === item.value
-                        ? 'bg-emerald-50'
-                        : 'hover:bg-slate-50'
-                    }`}
-                  >
-                    <div
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                        establecimientoId === item.value
-                          ? 'bg-blue-100 text-emerald-800'
-                          : 'bg-slate-100 text-slate-500'
-                      }`}
-                    >
-                      <BuildingOffice2Icon className="h-5 w-5" />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <p className="font-semibold text-slate-800">
-                        {item.label}
-                      </p>
-                    </div>
-
-                    {establecimientoId === item.value && <SelectedIcon />}
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            {/* CONSULTORIOS */}
-            <section>
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-slate-900">
-                  2. Seleccione el consultorio
-                </h3>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  Seleccione uno de los consultorios disponibles.
-                </p>
-              </div>
-
-              <SearchInput
-                value={searchConsultorio}
-                onChange={setSearchConsultorio}
-                placeholder="Buscar consultorio..."
-                disabled={!establecimientoId}
-              />
-
-              {!establecimientoId ? (
-                <EmptyState text="Primero seleccione un establecimiento." />
-              ) : consultoriosFiltrados.length === 0 ? (
-                <EmptyState text="Este establecimiento no tiene consultorios disponibles." />
-              ) : (
-                <div className="mt-4 max-h-91.25 overflow-x-hidden overflow-y-auto rounded-2xl border border-slate-200">
-                  {consultoriosFiltrados.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => seleccionarConsultorio(item.value)}
-                      className={`flex w-full items-center gap-4 border-b border-slate-100 px-4 py-4 text-left transition last:border-none ${
-                        consultorioId === item.value
-                          ? 'bg-emerald-50'
-                          : 'hover:bg-slate-50'
-                      }`}
-                    >
-                      <div
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-                          consultorioId === item.value
-                            ? 'bg-blue-100 text-emearald-600'
-                            : 'bg-slate-100 text-slate-500'
-                        }`}
-                      >
-                        <HeartIcon className="h-5 w-5" />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-slate-800">
-                          {item.label}
-                        </p>
-                      </div>
-
-                      {consultorioId === item.value && <SelectedIcon />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </section>
-
-            {/* TIPO DE CONSULTORIO */}
-            <section>
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-slate-900">
-                  3. Seleccione el tipo de consultorio
-                </h3>
-
-                <p className="mt-1 text-sm text-slate-500">
-                  Indique el tipo de atención que necesita.
-                </p>
-              </div>
-
-              {!consultorioId ? (
-                <EmptyState text="Primero seleccione un consultorio." />
-              ) : (
-                <div className="mt-4 max-h-105 overflow-x-hidden overflow-y-auto rounded-2xl border border-slate-200">
-                  {dataTipoConsulotorio?.map((tipo) => {
-                    const selected = tipoConsultorioId === tipo.value;
-
-                    return (
-                      <button
-                        key={tipo.value}
-                        type="button"
-                        onClick={() => setTipoConsultorioId(tipo.value)}
-                        className={`flex w-full items-center  gap-4 rounded-2xl border p-5 text-left transition ${
-                          selected
-                            ? 'border-emerald-800 bg-emerald-50 shadow-sm'
-                            : 'border-slate-200 hover:border-blue-200 hover:bg-slate-50'
-                        }`}
-                      >
-                        <div
-                          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${
-                            selected
-                              ? 'bg-blue-100 text-emerald-800'
-                              : 'bg-slate-100 text-slate-600'
-                          }`}
-                        >
-                          <UserGroupIcon className="h-6 w-6" />
-                        </div>
-
-                        <div className="flex-1">
-                          <p className="font-semibold text-slate-900">
-                            {tipo.label}
-                          </p>
-                        </div>
-
-                        <div
-                          className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
-                            selected
-                              ? 'border-emerald-800 bg-emerald-900'
-                              : 'border-slate-300'
-                          }`}
-                        >
-                          {selected && (
-                            <CheckIcon className="h-4 w-4 text-white" />
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </section>
+            <SelectableList
+              title="2. SELECCIONE EL TIPO DE CONSULTORIO"
+              items={dataTipoConsulotorio}
+              value={tipoConsultorioId}
+              onChange={setTipoConsultorioId}
+              loading={loadingTipoConsultorio}
+            />
           </div>
 
           {/* FOOTER */}
@@ -422,68 +283,46 @@ export default function ModalSeleccionConsultorio({ open, onClose, onTable }) {
             >
               Cancelar
             </button>
+            <div className="flex gap-5">
+              <button
+                type="button"
+                onClick={() => {
+                  openModal(MODALS.CONFIGURATION);
+                }}
+                className="flex items-center gap-2 rounded-xl bg-emerald-800 px-7 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-900 disabled:cursor-not-allowed disabled:bg-slate-300"
+              >
+                Configuracion
+                <Cog6ToothIcon className="h-5 w-5" />
+              </button>
 
-            <button
-              type="button"
-              disabled={!puedeContinuar}
-              onClick={() => setOpenModal(true)}
-              className="flex items-center gap-2 rounded-xl bg-emerald-800 px-7 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-900 disabled:cursor-not-allowed disabled:bg-slate-300"
-            >
-              Continuar
-              <ChevronRightIcon className="h-5 w-5" />
-            </button>
+              <button
+                type="button"
+                disabled={!puedeContinuar}
+                onClick={() => {
+                  openModal(MODALS.CREATE);
+                }}
+                className="flex items-center gap-2 rounded-xl bg-emerald-800 px-7 py-3 font-semibold text-white shadow-sm transition hover:bg-emerald-900 disabled:cursor-not-allowed disabled:bg-slate-300"
+              >
+                Continuar
+                <ChevronRightIcon className="h-5 w-5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
       <ConfirmModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
+        open={isModalOpen(MODALS.CREATE)}
+        onClose={closeModal}
         onConfirm={continuar}
         type="crear"
         loading={loading}
       />
-    </>
-  );
-}
-
-function SearchInput({ value, onChange, placeholder, disabled = false }) {
-  return (
-    <div
-      className={`flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 ${
-        disabled ? 'bg-slate-50 opacity-60' : ''
-      }`}
-    >
-      <MagnifyingGlassIcon className="h-5 w-5 shrink-0 text-slate-400" />
-
-      <input
-        type="text"
-        value={value}
-        disabled={disabled}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+      <ConfiguracionFichasModal
+        open={isModalOpen(MODALS.CONFIGURATION)}
+        onClose={closeModal}
+        onSave={handleConfiguration}
       />
-    </div>
-  );
-}
-
-function SelectedIcon() {
-  return (
-    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-800">
-      <CheckIcon className="h-4 w-4 text-white" />
-    </div>
-  );
-}
-
-function EmptyState({ text }) {
-  return (
-    <div className="mt-4 flex min-h-52 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 text-center">
-      <div>
-        <BuildingOffice2Icon className="mx-auto h-8 w-8 text-slate-300" />
-
-        <p className="mt-3 text-sm text-slate-500">{text}</p>
-      </div>
-    </div>
+    </>
   );
 }
 

@@ -8,7 +8,11 @@ import {
   idParamSchema,
   validateRequest,
 } from '../../../middlewares/validateRequest.middlewares.js';
-import { consultorioSchema, consultorioUpdateSchema } from './schema.js';
+import {
+  consultorioSchema,
+  consultorioUpdateSchema,
+  consultorioTipoConsultorioUpdateSchema,
+} from './schema.js';
 
 const routes = new Router();
 
@@ -18,6 +22,11 @@ routes
   .get('/establecimientos', asyncHandler(EstablecimientoController.getSelect))
   .get('/select-siais', asyncHandler(ConsultorioController.getAllSelectSIAIS))
   .get('/tipo-consultorio', asyncHandler(TipoConsultorioController.getSelect))
+  .get(
+    '/configuracion/:id',
+    validateRequest({ paramsSchema: idParamSchema }),
+    asyncHandler(ConsultorioController.getConfigurationById),
+  )
   .get(
     '/:id',
     validateRequest({ paramsSchema: idParamSchema }),
@@ -32,7 +41,7 @@ routes
     '/:id',
     validateRequest({
       paramsSchema: idParamSchema,
-      bodySchema: consultorioUpdateSchema,
+      bodySchema: consultorioTipoConsultorioUpdateSchema,
     }),
     asyncHandler(ConsultorioController.changeTipoConsultorio),
   )
@@ -42,6 +51,14 @@ routes
       paramsSchema: idParamSchema,
     }),
     asyncHandler(ConsultorioController.ChangeStatus),
+  )
+  .patch(
+    '/configuracion/:id',
+    validateRequest({
+      paramsSchema: idParamSchema,
+      bodySchema: consultorioUpdateSchema,
+    }),
+    asyncHandler(ConsultorioController.updateConfiguracionById),
   );
 
 export default routes;

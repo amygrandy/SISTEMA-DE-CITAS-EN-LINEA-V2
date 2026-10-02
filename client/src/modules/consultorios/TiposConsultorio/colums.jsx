@@ -23,6 +23,7 @@ export const getColumns = ({ onEditar, onChangeStatus }) => [
       </div>
     ),
   },
+
   {
     accessorKey: 'estado',
     header: 'ESTADO',

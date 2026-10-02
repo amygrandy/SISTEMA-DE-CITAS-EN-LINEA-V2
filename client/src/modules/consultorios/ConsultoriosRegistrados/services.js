@@ -64,4 +64,23 @@ export class ConsultorioServices {
       return toServiceError(e);
     }
   }
+  static async getConfiguracionById({ id }) {
+    try {
+      const response = await api.get(`admin/consultorio/configuracion/${id}`);
+      return response.data;
+    } catch (e) {
+      return toServiceError(e);
+    }
+  }
+  static async updateConfiguracionById({ id, payload }) {
+    try {
+      const response = await api.patch(
+        `admin/consultorio/configuracion/${id}`,
+        payload,
+      );
+      return response.data;
+    } catch (e) {
+      return toServiceError(e);
+    }
+  }
 }

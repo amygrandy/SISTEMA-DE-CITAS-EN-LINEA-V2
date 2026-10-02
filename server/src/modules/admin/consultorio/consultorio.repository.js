@@ -1,8 +1,8 @@
 import { getConnection, sql } from '../../../sqlserverSIAIS/database.js';
-
 import { ConsultorioModel } from '../../../models/consultorio.model.js';
 import { TipoConsultorioModel } from '../../../models/tipoConsultorio.model.js';
 import { EstablecimientoModel } from '../../../models/establecimiento.model.js';
+import { diaSemanaModel } from '../../../models/diaSemana.model.js';
 import { col, Op } from 'sequelize';
 
 export class ConsultorioRepository {
@@ -75,6 +75,8 @@ export class ConsultorioRepository {
       attributes: [
         'idCuaderno',
         'nombre_consultorio',
+        'cantidad_fichas_por_dia',
+        'dias_anticipacion',
         [col('tipoConsultorio.nombre_tipo'), 'tipo_consultorio'],
         [
           col('establecimientoConsultorio.nombre_establecimiento'),
@@ -178,6 +180,34 @@ export class ConsultorioRepository {
       },
       raw: true,
     });
+    return data;
+  }
+  static async getConfiguarionById({ id, transaction = null }) {
+    const data = await ConsultorioModel.findByPk(id, {
+      attributes: ['cantidad_fichas_por_dia', 'dias_anticipacion'],
+      include: [
+        {
+          model: diaSemanaModel,
+          as: 'dias',
+          attributes: ['id'],
+          through: { attributes: [] },
+        },
+      ],
+
+      transaction,
+    });
+
+    if (!data) {
+      return null;
+    }
+    return data.toJSON();
+  }
+  static async updateConfigurationById({ id, payload, transaction = null }) {
+    const data = await ConsultorioModel.findByPk(id, { transaction });
+    if (!data) {
+      return null;
+    }
+    await data.update(payload, { transaction });
     return data;
   }
 }

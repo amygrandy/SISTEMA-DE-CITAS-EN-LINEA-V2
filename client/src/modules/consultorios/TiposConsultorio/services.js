@@ -31,10 +31,6 @@ export class TipoConsultorioServices {
   }
   static async changeStatus({ id }) {
     try {
-      console.log('*****');
-      console.log(id);
-      console.log('*****');
-
       const response = await api.patch(
         `/admin/tipo-consultorio/cambiar-estado/${id}`,
       );

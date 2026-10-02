@@ -116,3 +116,21 @@ export const reqIntegerArray = ({
 
   return schema;
 };
+
+export const reqHora = ({ label = 'Hora', required = true }) => {
+  let schema = z
+    .string({
+      required_error: `${label} es obligatorio`,
+      invalid_type_error: `${label} debe ser una hora válida`,
+    })
+    .regex(
+      /^([01]\d|2[0-3]):([0-5]\d)$/,
+      `${label} debe tener el formato HH:mm`,
+    );
+
+  if (!required) {
+    schema = schema.optional();
+  }
+
+  return schema;
+};
