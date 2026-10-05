@@ -58,8 +58,10 @@ export const consultorioUpdateSchema = z.object({
     label: 'Cantidad fichas',
     required: false,
   }),
-  dias_anticipacion: reqInteger({ label: 'Dias anticipacion' }),
-
+  dias_anticipacion: reqInteger({
+    label: 'Dias anticipacion',
+    required: false,
+  }),
   dias_habilitados: reqIntegerArray({
     label: 'Dias habilitado',
     required: false,

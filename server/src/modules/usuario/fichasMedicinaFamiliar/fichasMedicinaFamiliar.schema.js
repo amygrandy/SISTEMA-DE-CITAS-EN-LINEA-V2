@@ -1,5 +1,5 @@
 import z from 'zod';
-import { reqString } from '../../../shared/services/ZodServices.js';
+import { reqString, reqInteger } from '../../../shared/services/ZodServices.js';
 
 export const fichasMedicinaFamiliarSchema = z.object({
   matricula_codigo: reqString({
@@ -10,4 +10,9 @@ export const fichasMedicinaFamiliarSchema = z.object({
     regexMessage: 'La matrícula solo puede contener letras y números',
     required: true,
   }),
+});
+
+export const FechasCuadernoSchema = z.object({
+  idCuaderno: reqInteger({ label: 'Cuaderno' }),
+  idEstablecimiento: reqInteger({ label: 'Establecimiento' }),
 });

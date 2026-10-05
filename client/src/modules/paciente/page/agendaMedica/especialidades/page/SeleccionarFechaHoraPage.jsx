@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { MedicianaFamiliarServices } from '../../services';
 import {
   UserIcon,
   IdentificationIcon,
@@ -11,13 +12,42 @@ import {
   ArrowRightIcon,
   HeartIcon,
 } from '@heroicons/react/24/outline';
+import { toast } from 'react-toastify';
 
 export default function SeleccionarFechaHora() {
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
   const [horaSeleccionada, setHoraSeleccionada] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [fechas, setFechas] = useState([]);
 
   const navigate = useNavigate();
   const { state } = useLocation();
+  console.log(state);
+
+  useEffect(() => {
+    try {
+      setLoading(true);
+      const dataLoad = async () => {
+        const response = await MedicianaFamiliarServices.getFechaHabilitadas({
+          idCuaderno: state.idcuaderno,
+          idEstablecimiento: state.idestablecimiento,
+        });
+        if (!response.ok) {
+          throw new Error(response.message || 'No se pudo cargar las fechas');
+        }
+        setFechas(Array.isArray(response.data) ? response.data : []);
+      };
+      dataLoad();
+    } catch (e) {
+      if (e instanceof Error) {
+        return toast.error(e.message || 'No se pudo cargar las fechas');
+      } else {
+        return toast.error('Algo salio mal, intentelo mas tarde');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const asegurado = {
     nombreCompleto: state?.nombre_completo || '',
@@ -31,44 +61,6 @@ export default function SeleccionarFechaHora() {
   const consultorio = {
     nombre: state.consultorio || '',
   };
-
-  const fechas = [
-    {
-      id: 1,
-      dia: 'LUN',
-      numero: '28',
-      mes: 'SEP',
-      fecha: '2026-09-28',
-    },
-    {
-      id: 2,
-      dia: 'MAR',
-      numero: '29',
-      mes: 'SEP',
-      fecha: '2026-09-29',
-    },
-    {
-      id: 3,
-      dia: 'MIÉ',
-      numero: '30',
-      mes: 'SEP',
-      fecha: '2026-09-30',
-    },
-    {
-      id: 4,
-      dia: 'JUE',
-      numero: '01',
-      mes: 'OCT',
-      fecha: '2026-10-01',
-    },
-    {
-      id: 5,
-      dia: 'VIE',
-      numero: '02',
-      mes: 'OCT',
-      fecha: '2026-10-02',
-    },
-  ];
 
   const horarios = useMemo(() => {
     if (!fechaSeleccionada) return [];
@@ -262,42 +254,46 @@ export default function SeleccionarFechaHora() {
               return (
                 <button
                   key={fecha.id}
+                  disabled={!fecha.tiene_fichas}
                   type="button"
                   onClick={() => seleccionarFecha(fecha)}
                   className={`
-                    relative rounded-2xl border
-                    px-4 py-4
-                    text-center
-                    transition-all duration-200
+                  relative rounded-2xl border
+                  px-4 py-4
+                  text-center
+                  transition-all duration-200
 
-                    ${
-                      seleccionado
-                        ? `
-                          border-[#245249]
-                          bg-[#245249]
-                          text-white
-                          shadow-md
-                        `
-                        : `
-                          border-slate-200
-                          bg-white
-                          text-slate-700
-                          hover:-translate-y-0.5
-                          hover:border-[#91b2aa]
-                          hover:bg-[#f5faf8]
-                        `
-                    }
-                  `}
+                  disabled:cursor-not-allowed
+                  disabled:opacity-60
+
+                  ${
+                    seleccionado
+                      ? `
+                        border-[#245249]
+                        bg-[#245249]
+                        text-white
+                        shadow-md
+                      `
+                      : `
+                        border-slate-200
+                        bg-white
+                        text-slate-700
+                        enabled:hover:-translate-y-0.5
+                        enabled:hover:border-[#91b2aa]
+                        enabled:hover:bg-[#f5faf8]
+                      `
+                  }
+                `}
                 >
                   {seleccionado && (
                     <div
                       className="
-                        absolute right-2 top-2
-                        flex h-5 w-5
-                        items-center justify-center
-                        rounded-full bg-white
-                        text-[#245249]
-                      "
+                      absolute right-2 top-2
+                      flex h-5 w-5
+                      items-center justify-center
+                      rounded-full bg-white
+                      text-[#245249]
+                    "
                     >
                       <CheckIcon className="h-3.5 w-3.5" />
                     </div>
@@ -305,9 +301,9 @@ export default function SeleccionarFechaHora() {
 
                   <p
                     className={`
-                      text-xs font-bold
-                      ${seleccionado ? 'text-white/70' : 'text-slate-400'}
-                    `}
+                    text-xs font-bold
+                    ${seleccionado ? 'text-white/70' : 'text-slate-400'}
+                  `}
                   >
                     {fecha.dia}
                   </p>
@@ -316,12 +312,18 @@ export default function SeleccionarFechaHora() {
 
                   <p
                     className={`
-                      mt-1 text-xs font-semibold
-                      ${seleccionado ? 'text-white/70' : 'text-slate-500'}
-                    `}
+                    mt-1 text-xs font-semibold
+                    ${seleccionado ? 'text-white/70' : 'text-slate-500'}
+                  `}
                   >
                     {fecha.mes}
                   </p>
+
+                  {!fecha.tiene_fichas && (
+                    <p className="mt-2 text-[10px] font-bold text-red-500">
+                      SIN FICHAS
+                    </p>
+                  )}
                 </button>
               );
             })}

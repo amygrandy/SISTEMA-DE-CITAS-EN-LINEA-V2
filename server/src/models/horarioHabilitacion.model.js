@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/database.js';
 
-export const horarioHabilitacionModel = sequelize.define(
+export const HorarioHabilitacionModel = sequelize.define(
   'HorarioHabilitacion',
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },

@@ -117,17 +117,26 @@ export class ConsultorioRepository {
   }
   static async getById({ id, transaction = null }) {
     const data = await ConsultorioModel.findOne({
+      attributes: { exclude: ['createdAt', 'updatedAt'] },
+      include: [
+        {
+          model: diaSemanaModel,
+          as: 'dias',
+          through: {
+            attributes: [],
+          },
+        },
+      ],
       where: {
         idCuaderno: id,
       },
       transaction,
-      raw: true,
     });
 
     if (!data) {
       return null;
     }
-    return data;
+    return data.toJSON();
   }
   static async changeTipoConsultorio({ id, payload, transaction = null }) {
     const data = await ConsultorioModel.findByPk(id, { transaction });

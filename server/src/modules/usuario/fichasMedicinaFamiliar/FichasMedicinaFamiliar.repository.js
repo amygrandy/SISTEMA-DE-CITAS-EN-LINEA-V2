@@ -1,7 +1,7 @@
 import { getConnection, sql } from '../../../sqlserverSIAIS/database.js';
 
-class FichasMedicinaFalimiarRepository {
-  async getFichasHistorial(payload) {
+export class FichasMedicinaFalimiarRepository {
+  static async getFichasHistorial(payload) {
     const { matricula_codigo } = payload;
     const pool = await getConnection();
     const data = await pool
@@ -30,6 +30,41 @@ class FichasMedicinaFalimiarRepository {
 
     return data.recordsets[0];
   }
-}
 
-export default FichasMedicinaFalimiarRepository;
+  static async getFechasByCuaderno({
+    fecha_inicial,
+    fecha_final,
+    idCuaderno,
+    idEstablecimiento,
+  }) {
+    const pool = await getConnection();
+
+    const fechaInicialSQL = fecha_inicial.replaceAll('-', '');
+    const fechaFinalSQL = fecha_final.replaceAll('-', '');
+
+    const data = await pool
+      .request()
+      .input('fecha_inicial', sql.VarChar(8), fechaInicialSQL)
+      .input('fecha_final', sql.VarChar(8), fechaFinalSQL)
+      .input('idCuaderno', sql.Int, idCuaderno)
+      .input('idEstablecimiento', sql.Int, idEstablecimiento).query(`
+      SET LANGUAGE Spanish;
+      SET DATEFORMAT dmy;
+
+      SELECT DISTINCT
+        ffpp.fecha
+      FROM bdfichas.dbo.fic_fichas_programadas_pantalla ffpp
+      WHERE ffpp.fecha > @fecha_inicial
+        AND ffpp.fecha <= @fecha_final
+        AND ffpp.idcuaderno = @idCuaderno
+        AND ffpp.idestablecimiento = @idEstablecimiento
+      ORDER BY ffpp.fecha;
+    `);
+
+    console.log('llega aca');
+    return data.recordset.map((item) => ({
+      ...item,
+      fecha: item.fecha.toISOString().split('T')[0],
+    }));
+  }
+}

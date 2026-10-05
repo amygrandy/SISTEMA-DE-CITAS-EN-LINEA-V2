@@ -6,6 +6,8 @@ import ConsultorioRoutes from '../../modules/admin/consultorio/consultorio.route
 import TipoConsultorioRoutes from '../../modules/admin/tipoConsultorio/tipoConsultorio.routes.js';
 import ZonificacionConsultorioRoutes from '../../modules/admin/zonificacionConsultorios/ZonificacionConsultorio.routes.js';
 import HorarioHabilitacionRoutes from '../../modules/admin/horarioHabilitacion/horarioHabilitacion.routes.js';
+import CantidadBeneficiariosRoutes from '../../modules/admin/cantidadBeneficiarios/cantidadBeneficiarios.routes.js';
+import ControlInasistencia from '../../modules/admin/controlInasistencia/controlInasistencia.routes.js';
 
 const routes = new Router();
 
@@ -16,6 +18,8 @@ routes
   .use('/tipo-consultorio', TipoConsultorioRoutes)
   .use('/zonificacion', ZonificacionConsultorioRoutes)
   .use('/poblacion', PoblacionRoutes)
-  .use('horario-habilitacion', HorarioHabilitacionRoutes);
+  .use('/horario-habilitacion', HorarioHabilitacionRoutes)
+  .use('/cantidad-beneficiarios', CantidadBeneficiariosRoutes)
+  .use('/control-inasistencia', ControlInasistencia);
 
 export default routes;

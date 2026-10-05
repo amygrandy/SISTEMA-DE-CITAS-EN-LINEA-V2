@@ -5,7 +5,7 @@ export const CantidadBeneficiariosModel = sequelize.define(
   'CantidadBeneficiarios',
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    cantidad_fichas: { type: DataTypes.INTEGER, defaultValue: 1 },
+    cantidad_ficha_por_asgurado: { type: DataTypes.INTEGER, defaultValue: 1 },
   },
   {
     tableName: 'cantidad_beneficiarios',

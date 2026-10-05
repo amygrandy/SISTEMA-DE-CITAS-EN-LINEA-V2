@@ -29,6 +29,8 @@ import AgendaMedica from './modules/paciente/page/agendaMedica/inicio/page/Agend
 import EstablecimientosPage from './modules/paciente/page/Establecimientos/EstablecimientosPage';
 import EspecialidadesPage from './modules/paciente/page/agendaMedica/especialidades/page/EspecialidadesPage';
 import SeleccionarFechaHoraPage from './modules/paciente/page/agendaMedica/especialidades/page/SeleccionarFechaHoraPage';
+//
+import ParametroGlobales from './modules/parametroGlobales/ParametroGlobales.tab';
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
           <Route index element={<Navigate to="establecimientos" replace />} />
           <Route path="establecimientos" element={<EstablecimientoPage />} />
           <Route path="consultorios" element={<ConsultorioTab />} />
+          <Route path="parametros-globales" element={<ParametroGlobales />} />
         </Route>
         <Route element={<ProtectedRoutes />}>
           <Route element={<UsuarioNormaRoute />}>

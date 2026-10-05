@@ -8,11 +8,14 @@ import { EstablecimientoModel } from '../models/establecimiento.model.js';
 import { ConsultorioModel } from '../models/consultorio.model.js';
 import { TipoConsultorioModel } from '../models/tipoConsultorio.model.js';
 import { ZodificacionConsultorioModel } from '../models/zonificacionConsultorio.model.js';
-
 import {
   consultorioDiaSemanaModel,
   diaSemanaModel,
 } from '../models/diaSemana.model.js';
+
+import { CantidadBeneficiariosModel } from '../models/cantidadBeneficiarios.model.js';
+import { HorarioHabilitacionModel } from '../models/horarioHabilitacion.model.js';
+import { SancionInasistenciaModel } from '../models/sancioInasistencia.model.js';
 
 export async function ConnectBD() {
   try {
@@ -27,13 +30,18 @@ export async function ConnectBD() {
 
     // await EstablecimientoModel.sync({ alter: true });
 
-    await TipoConsultorioModel.sync({ alter: true });
-    await ConsultorioModel.sync({ alter: true });
+    // await TipoConsultorioModel.sync({ alter: true });
+    // await ConsultorioModel.sync({ alter: true });
 
     // await ZodificacionConsultorioModel.sync({ alter: true });
 
     // await diaSemanaModel.sync({ alter: true });
     // await consultorioDiaSemanaModel.sync({ alter: true });
+
+    //PARAMETROS GLOBALES
+    await CantidadBeneficiariosModel.sync({ alter: true });
+    await HorarioHabilitacionModel.sync({ alter: true });
+    await SancionInasistenciaModel.sync({ alter: true });
 
     console.log('✅ SE CARGO CORRECTAMENTE LAS TABLAS');
   } catch (e) {

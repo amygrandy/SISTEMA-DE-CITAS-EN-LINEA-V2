@@ -26,6 +26,11 @@ export const menu = [
     path: '/admin/consultorios',
     icon: UserGroupIcon,
   },
+  {
+    nombre: 'PARAMETROS GLOBALES',
+    path: '/admin/parametros-globales',
+    icon: UserGroupIcon,
+  },
   // {
   //   nombre: 'GESTION DE TIPOS DE CONSULTORIOS',
   //   path: '/admin/medicos',

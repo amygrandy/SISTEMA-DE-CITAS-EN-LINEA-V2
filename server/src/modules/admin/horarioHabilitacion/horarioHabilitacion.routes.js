@@ -9,14 +9,11 @@ import { HorarioHabilitacionSchema } from './horarioHabilitacion.schema.js';
 
 const routes = new Router();
 
-routes
-  .get('/', asyncHandler(HorarioHabilitacionController.getAll))
-  .patch(
-    '/:id',
-    validateRequest({
-      paramsSchema: idParamSchema,
-      bodySchema: HorarioHabilitacionSchema,
-    }),
-    asyncHandler(HorarioHabilitacionController.update),
-  );
+routes.get('/', asyncHandler(HorarioHabilitacionController.getById)).put(
+  '/',
+  validateRequest({
+    bodySchema: HorarioHabilitacionSchema,
+  }),
+  asyncHandler(HorarioHabilitacionController.update),
+);
 export default routes;
