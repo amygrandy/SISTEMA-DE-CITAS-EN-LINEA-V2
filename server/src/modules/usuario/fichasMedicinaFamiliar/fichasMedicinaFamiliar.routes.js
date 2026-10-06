@@ -6,6 +6,8 @@ import { validateRequest } from '../../../middlewares/validateRequest.middleware
 import {
   fichasMedicinaFamiliarSchema,
   FechasCuadernoSchema,
+  HorariasCuadernoSchema,
+  reservarFichaSchema,
 } from './fichasMedicinaFamiliar.schema.js';
 
 const routes = new Router();
@@ -20,6 +22,16 @@ routes
     '/fechas-cuaderno',
     validateRequest({ bodySchema: FechasCuadernoSchema }),
     asyncHandler(FichasMedicinaFamiliarController.GetFechasByCuaderno),
+  )
+  .post(
+    '/obtener-horarias-fecha-cuaderno',
+    validateRequest({ bodySchema: HorariasCuadernoSchema }),
+    asyncHandler(FichasMedicinaFamiliarController.getHorariosByFechaByCuaderno),
+  )
+  .post(
+    '/reservar-ficha',
+    validateRequest({ bodySchema: reservarFichaSchema }),
+    asyncHandler(FichasMedicinaFamiliarController.reservarFicha),
   );
 
 export default routes;

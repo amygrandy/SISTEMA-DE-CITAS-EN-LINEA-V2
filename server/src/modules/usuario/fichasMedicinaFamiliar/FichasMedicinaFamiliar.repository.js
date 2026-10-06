@@ -1,4 +1,5 @@
 import { getConnection, sql } from '../../../sqlserverSIAIS/database.js';
+import { cupoFichaModel } from '../../../models/cupoFichas.model.js';
 
 export class FichasMedicinaFalimiarRepository {
   static async getFichasHistorial(payload) {
@@ -30,7 +31,6 @@ export class FichasMedicinaFalimiarRepository {
 
     return data.recordsets[0];
   }
-
   static async getFechasByCuaderno({
     fecha_inicial,
     fecha_final,
@@ -52,19 +52,97 @@ export class FichasMedicinaFalimiarRepository {
       SET DATEFORMAT dmy;
 
       SELECT DISTINCT
-        ffpp.fecha
-      FROM bdfichas.dbo.fic_fichas_programadas_pantalla ffpp
-      WHERE ffpp.fecha > @fecha_inicial
-        AND ffpp.fecha <= @fecha_final
-        AND ffpp.idcuaderno = @idCuaderno
-        AND ffpp.idestablecimiento = @idEstablecimiento
-      ORDER BY ffpp.fecha;
+          ffpp.fecha
+        FROM bdfichas.dbo.fic_fichas_programadas_pantalla ffpp
+        WHERE ffpp.fecha > @fecha_inicial
+          AND ffpp.fecha <= @fecha_final
+          AND ffpp.idcuaderno = @idCuaderno
+          AND ffpp.idestablecimiento = @idEstablecimiento
+        ORDER BY ffpp.fecha;
     `);
 
-    console.log('llega aca');
     return data.recordset.map((item) => ({
       ...item,
       fecha: item.fecha.toISOString().split('T')[0],
     }));
+  }
+  static async getHorariasByFechaByCuaderno({
+    fecha = '2026-09-28',
+    idCuaderno = '10130',
+    idEstablecimiento = '4',
+    limite = 0,
+  } = {}) {
+    if (limite == 0) {
+      return [];
+    }
+    const pool = await getConnection();
+
+    const data = await pool
+      .request()
+      .input('fecha', sql.Date, fecha)
+      .input('idCuaderno', sql.Int, idCuaderno)
+      .input('idEstablecimiento', sql.Int, idEstablecimiento)
+      .input('limite', sql.Int, limite).query(`
+      SET LANGUAGE Spanish;
+      SET DATEFORMAT dmy;
+
+        SELECT top (@limite)  ffpp.idfichaprogramada,ffpp.fip_fecha_ini,
+        ffpp.fip_hora_fin,ffpp.fip_estado, ffp.idpersonal, 
+        LTRIM(RTRIM(hps.per_nombre))+ ' '+LTRIM(RTRIM(hps.per_campo1)) +' '+LTRIM(RTRIM(hps.per_campo2)) as nombre_personal_salud,
+        ffp.fip_numero 
+        FROM bdfichas.dbo.fic_fichas_programadas_pantalla ffpp
+        INNER JOIN bdfichas.dbo.fic_fichas_programadas ffp on ffp.idfichaprogramada = ffpp.idfichaprogramada
+        INNER JOIN bdhistoriasclinicas.dbo.hcl_personal_salud hps on hps.idpersonalmedico = ffp.idpersonal  
+        WHERE ffpp.fecha  = @fecha
+        and ffpp.fip_estado ='Disponible'
+        and ffpp.idcuaderno =@idCuaderno
+        and ffpp.idestablecimiento =@idEstablecimiento
+        order by ffpp.fip_fecha_ini DESC;`);
+
+    return data.recordset.map((row) => ({
+      ...row,
+      fecha_ini: row.fip_fecha_ini,
+      fip_hora_fin: row.fip_hora_fin,
+      fip_fecha_ini: row.fip_fecha_ini.toISOString().slice(11, 16),
+    }));
+  }
+  static async reservarFicha({
+    idfichaprogramada,
+    origen,
+    paciente,
+    idusuario,
+    descripcionUsuario,
+    fecha_ini,
+    fecha_fin,
+    especialidad,
+    idMedico,
+    idEstablecimiento,
+    cobertura,
+  }) {
+    const pool = await getConnection();
+
+    const result = await pool
+      .request()
+      .input('idfichaprogramada', sql.Int, idfichaprogramada)
+      .input('origen', sql.Int, origen)
+      .input('paciente', sql.Int, paciente)
+      .input('idusuario', sql.Int, idusuario)
+      .input('descripcionUsuario', sql.VarChar(70), descripcionUsuario)
+      .input('fecha_ini', sql.DateTime, fecha_ini)
+      .input('fecha_fin', sql.DateTime, fecha_fin)
+      .input('especialidad', sql.Int, especialidad)
+      .input('idMedico', sql.Int, idMedico)
+      .input('idEstablecimiento', sql.Int, idEstablecimiento)
+      .input('cobertura', sql.Int, cobertura)
+      .execute('dbo.ficha_a_reservar');
+
+    console.log('*************');
+    console.log(result);
+    console.log('*************');
+
+    return {
+      codigo: result.returnValue,
+      data: result.recordset ?? [],
+    };
   }
 }

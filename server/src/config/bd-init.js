@@ -16,6 +16,9 @@ import {
 import { CantidadBeneficiariosModel } from '../models/cantidadBeneficiarios.model.js';
 import { HorarioHabilitacionModel } from '../models/horarioHabilitacion.model.js';
 import { SancionInasistenciaModel } from '../models/sancioInasistencia.model.js';
+//
+import { cupoFichaModel } from '../models/cupoFichas.model.js';
+import { FichaWebModel } from '../models/fichaWeb.model.js';
 
 export async function ConnectBD() {
   try {
@@ -39,9 +42,13 @@ export async function ConnectBD() {
     // await consultorioDiaSemanaModel.sync({ alter: true });
 
     //PARAMETROS GLOBALES
-    await CantidadBeneficiariosModel.sync({ alter: true });
-    await HorarioHabilitacionModel.sync({ alter: true });
-    await SancionInasistenciaModel.sync({ alter: true });
+    // await CantidadBeneficiariosModel.sync({ alter: true });
+    // await HorarioHabilitacionModel.sync({ alter: true });
+    // await SancionInasistenciaModel.sync({ alter: true });
+
+    await cupoFichaModel.sync({ alter: true });
+
+    await FichaWebModel.sync({ alter: true });
 
     console.log('✅ SE CARGO CORRECTAMENTE LAS TABLAS');
   } catch (e) {

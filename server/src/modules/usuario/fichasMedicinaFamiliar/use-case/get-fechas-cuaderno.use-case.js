@@ -64,17 +64,23 @@ export class GetFechasByCuadernoUseCase {
 
     const fechasConsultorioSIAIS =
       await FichasMedicinaFalimiarRepository.getFechasByCuaderno({
-        idCuaderno: idCuaderno,
-        idEstablecimiento: idEstablecimiento,
+        idCuaderno,
+        idEstablecimiento,
         fecha_inicial: hoy,
         fecha_final: fechasHabilitados.at(-1).fecha,
       });
 
-    const fechasSet = new Set(fechasConsultorioSIAIS.map((item) => item.fecha));
+    const fechasSIAIS = new Set(
+      fechasConsultorioSIAIS.map((item) => {
+        return item.fecha instanceof Date
+          ? item.fecha.toISOString().slice(0, 10)
+          : item.fecha;
+      }),
+    );
 
     const resultado = fechasHabilitados.map((item) => ({
       ...item,
-      tiene_fichas: fechasSet.has(item.fecha),
+      tiene_fichas: fechasSIAIS.has(item.fecha),
     }));
 
     const fechasFormateadas = resultado.map((item, index) => {
@@ -87,8 +93,10 @@ export class GetFechasByCuadernoUseCase {
         mes: meses[mes],
         fecha: item.fecha,
         tiene_fichas: item.tiene_fichas,
+        idpersonal: item.idpersonal,
       };
     });
+
     return fechasFormateadas;
   }
 }

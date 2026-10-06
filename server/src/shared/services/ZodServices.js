@@ -134,3 +134,51 @@ export const reqHora = ({ label = 'Hora', required = true }) => {
 
   return schema;
 };
+
+export const reqFecha = ({ label = 'Fecha', required = true } = {}) => {
+  let schema = z
+    .string({
+      required_error: `Debe ingresar ${label.toLowerCase()}`,
+      invalid_type_error: `${label} debe ser una fecha válida`,
+    })
+    .trim()
+    .refine(
+      (value) => {
+        if (!value) return false;
+
+        const fecha = new Date(`${value}T00:00:00`);
+
+        return (
+          !Number.isNaN(fecha.getTime()) && /^\d{4}-\d{2}-\d{2}$/.test(value)
+        );
+      },
+      {
+        message: `${label} debe ser una fecha válida`,
+      },
+    );
+
+  if (!required) {
+    schema = schema.optional().or(z.literal(''));
+  }
+
+  return schema;
+};
+
+export const reqDateTimeUTC = ({ label = 'Fecha', required = true } = {}) => {
+  let schema = z
+    .string({
+      required_error: `Debe ingresar ${label.toLowerCase()}`,
+      invalid_type_error: `${label} debe ser una fecha válida`,
+    })
+    .datetime({
+      precision: 3,
+      offset: false,
+      message: `${label} debe tener el formato YYYY-MM-DDTHH:mm:ss.sssZ`,
+    });
+
+  if (!required) {
+    schema = schema.optional();
+  }
+
+  return schema;
+};
