@@ -29,6 +29,7 @@ import AgendaMedica from './modules/paciente/page/agendaMedica/inicio/page/Agend
 import EstablecimientosPage from './modules/paciente/page/Establecimientos/EstablecimientosPage';
 import EspecialidadesPage from './modules/paciente/page/agendaMedica/especialidades/page/EspecialidadesPage';
 import SeleccionarFechaHoraPage from './modules/paciente/page/agendaMedica/especialidades/page/SeleccionarFechaHoraPage';
+import SeleccionarHorariosOdontologiaPage from './modules/paciente/page/agendaMedica/especialidades/page/SeleccionarHorariosOdontologiaPage';
 //
 import ParametroGlobales from './modules/parametroGlobales/ParametroGlobales.tab';
 
@@ -65,6 +66,10 @@ function App() {
               <Route
                 path="seleccionar-fecha"
                 element={<SeleccionarFechaHoraPage />}
+              />
+              <Route
+                path="seleccionar-fecha-odontologia"
+                element={<SeleccionarHorariosOdontologiaPage />}
               />
               <Route
                 path="centros-medicos"

@@ -8,6 +8,10 @@ import {
 } from '@heroicons/react/24/outline';
 import ServiceCard from '../../../../components/ServiceCard';
 import SeleccionarPaciente from '../../../../components/SeleccionarPaciente';
+import {
+  MODALS,
+  useModalManager,
+} from '../../../../../../hooks/useModalManager';
 
 const servicios = [
   {
@@ -24,39 +28,77 @@ const servicios = [
     icon: ClipboardDocumentCheckIcon, // ✅ check → confirmar reserva
     variant: 'blue',
   },
-  {
-    id: 3,
-    title: 'Especialidades',
-    description: 'Consulta el historial de tus citas con especialistas',
-    icon: ClipboardDocumentListIcon, // 📋 lista → historial
-    variant: 'green',
-  },
+  // {
+  //   id: 3,
+  //   title: 'Especialidades',
+  //   description: 'Consulta el historial de tus citas con especialistas',
+  //   icon: ClipboardDocumentListIcon, // 📋 lista → historial
+  //   variant: 'green',
+  // },
 ];
 
 export default function EspecialidadesPage() {
-  const [openModal, setOpenModal] = useState(false);
+  const { closeModal, isModalOpen, modalState, openModal } = useModalManager();
   const navigate = useNavigate();
 
   const handleIrEspecialidad = (id) => {
     switch (id) {
       case 1:
-        setOpenModal(true);
+        openModal(MODALS.MEDICINA_FAMILAIR);
         break;
+
       case 2:
-        console.log('Medicina odontologca');
+        openModal(MODALS.ODONTOLOGIA);
         break;
+
       case 3:
-        console.log('Medicina especialidad');
+        openModal(MODALS.ESPECIALIDADES);
         break;
+
       default:
+        break;
     }
   };
 
-  const handleMedicinaFamiliar = (asegurado) => {
-    navigate('/paciente/seleccionar-fecha', {
-      state: { ...asegurado, tipo: 'MEDICINA FAMILIAR' },
-    });
+  const handleOpciones = (asegurado) => {
+    switch (modalState.type) {
+      case MODALS.MEDICINA_FAMILAIR:
+        navigate('/paciente/seleccionar-fecha', {
+          state: {
+            ...asegurado,
+            tipo: 'MEDICINA FAMILIAR',
+          },
+        });
+        break;
+
+      case MODALS.ODONTOLOGIA:
+        navigate('/paciente/seleccionar-fecha-odontologia', {
+          state: {
+            ...asegurado,
+            tipo: 'ODONTOLOGIA',
+          },
+        });
+        break;
+
+      case MODALS.ESPECIALIDADES:
+        navigate('/paciente/seleccionar-fecha-especialidades', {
+          state: {
+            ...asegurado,
+            tipo: 'ESPECIALIDADES',
+          },
+        });
+        break;
+
+      default:
+        break;
+    }
   };
+
+  const modalPacienteAbierto =
+    isModalOpen(MODALS.MEDICINA_FAMILAIR) ||
+    isModalOpen(MODALS.ODONTOLOGIA) ||
+    isModalOpen(MODALS.ESPECIALIDADES);
+
   return (
     <>
       <main className="flex min-w-0 flex-col">
@@ -119,12 +161,16 @@ export default function EspecialidadesPage() {
         </section>
       </main>
       <SeleccionarPaciente
-        open={openModal}
-        onClose={() => {
-          setOpenModal(false);
-        }}
-        onConfirm={handleMedicinaFamiliar}
+        open={modalPacienteAbierto}
+        onClose={closeModal}
+        onConfirm={handleOpciones}
       />
     </>
   );
 }
+
+// const handleMedicinaFamiliar = (asegurado) => {
+//   navigate('/paciente/seleccionar-fecha', {
+//     state: { ...asegurado, tipo: 'MEDICINA FAMILIAR' },
+//   });
+// };

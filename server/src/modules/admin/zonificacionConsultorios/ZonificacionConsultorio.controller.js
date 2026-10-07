@@ -2,6 +2,7 @@ import { GetAllUseCase } from './use-case/get-all.use-case.js';
 import { CreateUseCase } from './use-case/create.use-case.js';
 import { GetIdUseCase } from './use-case/get-id.use-case.js';
 import { UpdateUseCase } from './use-case/update.use-case.js';
+import { CosultorioByOdontologiaUseCase } from './use-case/consulotrio-for-odontologia.use-case.js';
 
 export class ZonificacionConsultorioController {
   static async getAll(req, res) {
@@ -36,6 +37,16 @@ export class ZonificacionConsultorioController {
     return res.status(200).json({
       ok: true,
       message: 'Se actualizo correctamente la zonificacion',
+      data,
+    });
+  }
+  static async CosultorioByOdontologia(req, res) {
+    const data = await CosultorioByOdontologiaUseCase.execute({
+      cuaderno_id: req.validated.params.id,
+    });
+    return res.status(200).json({
+      ok: true,
+      message: 'Se obtuvo correctamente el consultorio de odontologia',
       data,
     });
   }

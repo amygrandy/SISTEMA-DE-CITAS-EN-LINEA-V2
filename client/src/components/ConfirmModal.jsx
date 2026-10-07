@@ -3,6 +3,7 @@ import {
   PencilSquareIcon,
   ArrowPathIcon,
   XMarkIcon,
+  CalendarDaysIcon,
 } from '@heroicons/react/24/outline';
 
 const modalConfig = {
@@ -37,6 +38,17 @@ const modalConfig = {
     iconBg: 'bg-green-50',
     iconColor: 'text-green-500',
     Icon: ArrowPathIcon,
+  },
+
+  cita: {
+    title: 'Confirmar reserva de cita',
+    description:
+      '¿Deseas confirmar esta cita? Se reservará una ficha para el paciente en la fecha seleccionada.',
+    button: 'Sí, confirmar cita',
+    color: 'bg-emerald-800 hover:bg-emerald-900',
+    iconBg: 'bg-emerald-50',
+    iconColor: 'text-emerald-600',
+    Icon: CalendarDaysIcon,
   },
 };
 

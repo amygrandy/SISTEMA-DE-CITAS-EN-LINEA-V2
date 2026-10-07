@@ -4,6 +4,7 @@ import HistorialRoutes from '../../modules/usuario/historial/historial.routes.js
 import FichasMedicinaFamiliarRoutes from '../../modules/usuario/fichasMedicinaFamiliar/fichasMedicinaFamiliar.routes.js';
 import PerfilRoutes from '../../modules/usuario/pefil/perfil.routes.js';
 import BeneficiariosRoutes from '../../modules/usuario/beneficiarios/beneficiario.routes.js';
+import OdontologiaRoutes from '../../modules/usuario/odontlogia/ondotolgia.routes.js';
 
 const routes = new Router();
 
@@ -12,6 +13,7 @@ routes
   .use('/historial', HistorialRoutes)
   .use('/perfil', PerfilRoutes)
   .use('/fichas-medicina-familiar', FichasMedicinaFamiliarRoutes)
-  .use('/beneficiario', BeneficiariosRoutes);
+  .use('/beneficiario', BeneficiariosRoutes)
+  .use('/buscar-odontologia', OdontologiaRoutes);
 
 export default routes;

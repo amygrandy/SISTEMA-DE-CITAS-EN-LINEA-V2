@@ -11,6 +11,10 @@ export const FichaWebModel = sequelize.define(
       unique: true,
     },
     fecha: { type: DataTypes.DATEONLY, allowNull: false },
+    fecha_ini: { type: DataTypes.DATE },
+    fecha_final: { type: DataTypes.DATE },
+
+    codigo: { type: DataTypes.STRING },
 
     poblacion_id: { type: DataTypes.INTEGER, allowNull: false },
     cedula_identidad: { type: DataTypes.STRING, allowNull: false },

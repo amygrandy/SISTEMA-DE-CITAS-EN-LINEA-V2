@@ -57,7 +57,9 @@ export class AseguradoRepository {
         LTRIM(RTRIM(hc.cua_nombre)) as consultorio,
         hpa.idcentroasignado as idestablecimiento,
         LTRIM(RTRIM(he.est_nombre)) as establecieminto,
-        hpa.idcobertura 
+        hpa.idcobertura,
+        hp.pac_codigo,
+        LTRIM(RTRIM(hc.cua_sigla)) as cua_sigla
         FROM bdhistoriasclinicas.dbo.hcl_poblacion hp 
         INNER JOIN bdhistoriasclinicas.dbo.hcl_poblacion_afiliacion hpa  on hp.idpoblacion =hpa.idpoblacion 
         INNER JOIN bdhistoriasclinicas.dbo.hcl_cuaderno hc on hc.idCuaderno = hpa.idcuaderno 

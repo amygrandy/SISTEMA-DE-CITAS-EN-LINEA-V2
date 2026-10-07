@@ -22,6 +22,9 @@ export class getHorariasByFechaByCuadernoUseCase {
       err.statusCode = 404;
       throw err;
     }
+    console.log('**************');
+    console.log(buscarCuaderno);
+    console.log('**************');
 
     const cuposFichas = await CupoFichasRepository.findOrCreate({
       cuaderno_id: idCuaderno,

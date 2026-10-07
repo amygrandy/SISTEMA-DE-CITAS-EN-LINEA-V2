@@ -1,4 +1,5 @@
 import { FichasMedicinaFalimiarRepository } from '../FichasMedicinaFamiliar.repository.js';
+import { HorarioHabilitacionRespository } from '../../../admin/horarioHabilitacion/horarioHabilitacion.repository.js';
 import { cupoFichaModel } from '../../../../models/cupoFichas.model.js';
 import { FichaWebModel } from '../../../../models/fichaWeb.model.js';
 import { sequelize } from '../../../../config/database.js';
@@ -19,10 +20,36 @@ export class ReservarFichaUseCase {
     establecimiento_id,
     establecieminto,
     idcobertura,
+    codigo,
   }) {
     const t = await sequelize.transaction();
 
     try {
+      const estaHabilitado =
+        await HorarioHabilitacionRespository.EstaHabilitado();
+      if (!estaHabilitado) {
+        const err = new Error(
+          'No se puede sacr ficha fuera el horario de habilitacion',
+        );
+        err.statusCode = 409;
+        throw err;
+      }
+      const tieneFichaEseDia = await FichaWebModel.findOne({
+        where: {
+          fecha,
+          poblacion_id,
+          cuaderno_id,
+          personal_id,
+          establecimiento_id,
+        },
+        transaction: t,
+      });
+      if (tieneFichaEseDia) {
+        const err = new Error('Ya tienes fichas para ese dia!!');
+        err.statusCode = 409;
+        throw err;
+      }
+      //
       const [affectedRows] = await cupoFichaModel.update(
         {
           reservas: sequelize.literal('reservas + 1'),
@@ -33,7 +60,7 @@ export class ReservarFichaUseCase {
             cuaderno_id,
             establecimiento_id,
 
-            [Op.and]: sequelize.literal('"reservas" < "limite"'),
+            [Op.and]: sequelize.literal('"reservas" <= "limite"'),
           },
           transaction: t,
         },
@@ -51,11 +78,12 @@ export class ReservarFichaUseCase {
         {
           idfichaprogramada,
           fecha,
-
+          fecha_ini,
+          fecha_final,
           poblacion_id,
           cedula_identidad,
           nombre_completo,
-
+          codigo,
           cuaderno_id,
           consultorio,
           personal_id,

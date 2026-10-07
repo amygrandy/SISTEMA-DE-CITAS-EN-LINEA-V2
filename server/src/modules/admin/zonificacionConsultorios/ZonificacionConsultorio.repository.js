@@ -2,6 +2,7 @@ import { col, Op } from 'sequelize';
 import { ZodificacionConsultorioModel } from '../../../models/zonificacionConsultorio.model.js';
 import { ConsultorioModel } from '../../../models/consultorio.model.js';
 import { EstablecimientoModel } from '../../../models/establecimiento.model.js';
+import { id } from 'zod/locales';
 
 export class ZonificacionConsultorioRepository {
   static async getAll() {
@@ -183,5 +184,24 @@ export class ZonificacionConsultorioRepository {
       return null;
     }
     return data;
+  }
+  static async consultorioForOndontologia({ cuaderno_id, transaction = null }) {
+    const data = await ZodificacionConsultorioModel.findOne({
+      where: {
+        consultorio_cabecera_id: cuaderno_id,
+      },
+      include: [
+        {
+          model: ConsultorioModel,
+          as: 'consultorioAsignado',
+        },
+      ],
+    });
+
+    if (!data) {
+      return null;
+    }
+
+    return data.toJSON();
   }
 }

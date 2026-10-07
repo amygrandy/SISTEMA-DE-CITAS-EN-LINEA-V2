@@ -311,7 +311,7 @@ export default function Login() {
                 className="group flex h-13 w-full items-center justify-center gap-2.5 rounded-xl bg-[#24534C] px-5 text-sm font-semibold text-white shadow-lg shadow-[#24534C]/20 transition duration-200 hover:-translate-y-0.5 hover:bg-[#193F3A] hover:shadow-xl hover:shadow-[#24534C]/25 focus:outline-none focus:ring-4 focus:ring-[#24534C]/20 active:translate-y-0 active:scale-[0.99]"
               >
                 <UserIcon className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
-                INICIAR SESION
+                {loading ? 'CARGANDO....' : 'INICIAR SESION'}
               </button>
             </form>
           </div>

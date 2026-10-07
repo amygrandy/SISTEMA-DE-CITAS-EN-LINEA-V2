@@ -16,7 +16,6 @@ export default function HistorialPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [consultas, setConsutas] = useState([]);
-  const persona = state?.persona;
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -24,7 +23,7 @@ export default function HistorialPage() {
       setLoading(true);
       const loadLoad = async () => {
         const response = await HistorialServices.getHistoria({
-          id: persona.idpoblacion,
+          id: state.idpoblacion,
         });
         if (!response.ok) {
           throw new Error(
@@ -45,12 +44,37 @@ export default function HistorialPage() {
     }
   }, []);
 
-  if (!persona) {
+  if (loading) {
+    return (
+      <main className="flex min-h-[60vh] w-full items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div
+            className="
+              h-12 w-12
+              animate-spin
+              rounded-full
+              border-4 border-slate-200
+              border-t-[#064135]
+            "
+          />
+
+          <div className="text-center">
+            <p className="font-semibold text-slate-700">Cargando historial</p>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Obteniendo información del asegurado...
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+  if (!state) {
     return (
       <main className="p-8 text-center text-slate-500">
         No se encontró la información del paciente.
         <button
-          onClick={() => navigate('/paciente/familia', { replace: true })}
+          onClick={() => navigate('/paciente/', { replace: true })}
           className="ml-2 font-semibold text-[#005B57]"
         >
           Volver
@@ -71,7 +95,7 @@ export default function HistorialPage() {
       <div className="mt-6 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
         <div>
           <p className="text-sm font-semibold text-[#005B57]">
-            {persona.nombre_completo}
+            {state.nombre_completo}
           </p>
 
           <h2 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
@@ -82,15 +106,6 @@ export default function HistorialPage() {
             Fichas y atenciones médicas registradas.
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => {}}
-          className="flex items-center justify-center gap-2 rounded-xl bg-[#005B57] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#004744]"
-        >
-          <CalendarDaysIcon className="h-5 w-5" />
-          Nueva reserva
-        </button>
       </div>
 
       <div className="mt-8 space-y-4">

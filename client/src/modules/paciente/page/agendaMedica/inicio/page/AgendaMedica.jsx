@@ -5,6 +5,11 @@ import {
   ClipboardDocumentListIcon,
 } from '@heroicons/react/24/outline';
 import ServiceCard from '../../../../components/ServiceCard';
+import SeleccionarPaciente from '../../../../components/SeleccionarPaciente';
+import {
+  MODALS,
+  useModalManager,
+} from '../../../../../../hooks/useModalManager';
 
 const servicios = [
   {
@@ -35,6 +40,55 @@ const servicios = [
 
 export default function AgendaMedica() {
   const navigate = useNavigate();
+  const { closeModal, isModalOpen, modalState, openModal } = useModalManager();
+
+  const handleIrEspecialidad = (id) => {
+    switch (id) {
+      case 1:
+        navigate('/paciente/especialidades');
+        break;
+
+      case 2:
+        openModal(MODALS.POGRAMACIONES_CITAS);
+        break;
+
+      case 3:
+        openModal(MODALS.HISOTRIAL_CITAS);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleOpciones = (asegurado) => {
+    switch (modalState.type) {
+      case MODALS.POGRAMACIONES_CITAS:
+        navigate('/paciente/programaciones-realizadas', {
+          state: {
+            ...asegurado,
+            tipo: 'PROGRAMACIONES REALIZADAS',
+          },
+        });
+        break;
+
+      case MODALS.HISOTRIAL_CITAS:
+        navigate('/paciente/historial', {
+          state: {
+            ...asegurado,
+            tipo: 'HISTORIAL CITAS',
+          },
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
+  const modalPacienteAbierto =
+    isModalOpen(MODALS.POGRAMACIONES_CITAS) ||
+    isModalOpen(MODALS.HISOTRIAL_CITAS);
+
   return (
     <>
       {' '}
@@ -77,12 +131,17 @@ export default function AgendaMedica() {
                 description={servicio.description}
                 icon={servicio.icon}
                 variant={servicio.variant}
-                onClick={() => navigate(servicio.path)}
+                onClick={() => handleIrEspecialidad(servicio.id)}
               />
             ))}
           </div>
         </section>
       </main>
+      <SeleccionarPaciente
+        open={modalPacienteAbierto}
+        onClose={closeModal}
+        onConfirm={handleOpciones}
+      />
     </>
   );
 }

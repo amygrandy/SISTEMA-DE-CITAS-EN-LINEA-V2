@@ -30,8 +30,8 @@ export const HorariasCuadernoSchema = z.object({
 
 export const reservarFichaSchema = z.object({
   fecha: reqFecha({ label: 'Fecha' }),
-  fecha_ini: reqDateTimeUTC({ label: 'Fecha ini' }),
-  fecha_final: reqDateTimeUTC({ label: 'Fecha final' }),
+  fecha_ini: reqString({ field: 'Fecha ini' }),
+  fecha_final: reqString({ field: 'Fecha final' }),
   cuaderno_id: reqInteger({ label: 'Cuaderno' }),
   establecimiento_id: reqInteger({ label: 'Establecimiento' }),
   poblacion_id: reqInteger({ label: 'Poblacion' }),
@@ -43,4 +43,5 @@ export const reservarFichaSchema = z.object({
   establecieminto: reqString({ field: 'Establecimiento' }),
   idcobertura: reqInteger({ label: 'Cobertura' }),
   nombre_doctor: reqString({ field: 'Nombre doctor' }),
+  codigo: reqString({ field: 'Codigo' }),
 });

@@ -11,52 +11,6 @@ import { toast } from 'react-toastify';
 import { formatDateText } from '../../../../utils/funcionesZod';
 
 export default function BeneficiariosPage() {
-  // const beneficiarios = [
-  //   {
-  //     id: 1,
-  //     matricula: '1025487',
-  //     ci: '8456123 CB',
-  //     nombres: 'María Fernanda',
-  //     primer_apellido: 'Chávez',
-  //     segundo_apellido: 'Rojas',
-  //     parentesco: 'Hija',
-  //     afiliacion: 'Activa',
-  //     fechaNacimiento: '12/03/2012',
-  //   },
-  //   {
-  //     id: 2,
-  //     matricula: '1025488',
-  //     ci: '6987451 CB',
-  //     nombres: 'Ana Lucía',
-  //     primer_apellido: 'Torrez',
-  //     segundo_apellido: 'Vargas',
-  //     parentesco: 'Esposa',
-  //     afiliacion: 'Activa',
-  //     fechaNacimiento: '28/11/1990',
-  //   },
-  //   {
-  //     id: 3,
-  //     matricula: '1025489',
-  //     ci: '7412589 CB',
-  //     nombres: 'Luis Alberto',
-  //     primer_apellido: 'Chávez',
-  //     segundo_apellido: 'Rojas',
-  //     parentesco: 'Hijo',
-  //     afiliacion: 'Pendiente',
-  //     fechaNacimiento: '04/07/2018',
-  //   },
-  //   {
-  //     id: 4,
-  //     matricula: '1025490',
-  //     ci: '9632587 CB',
-  //     nombres: 'Julia Elena',
-  //     primer_apellido: 'Torrez',
-  //     segundo_apellido: 'Mendoza',
-  //     parentesco: 'Madre',
-  //     afiliacion: 'Inactiva',
-  //     fechaNacimiento: '09/02/1963',
-  //   },
-  // ];
   const [beneficiarios, setBeneficiarios] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -99,7 +53,9 @@ export default function BeneficiariosPage() {
           />
 
           <div className="text-center">
-            <p className="font-semibold text-slate-700">Cargando perfil</p>
+            <p className="font-semibold text-slate-700">
+              Cargando beneficiarios
+            </p>
 
             <p className="mt-1 text-sm text-slate-500">
               Obteniendo información del asegurado...
@@ -199,21 +155,21 @@ function BeneficiarioCard({ item }) {
         <InfoChip
           icon={CreditCardIcon}
           label="Matrícula"
-          value={item.pac_codigo}
+          value={item?.pac_codigo}
           color="emerald"
         />
 
         <InfoChip
           icon={IdentificationIcon}
           label="Documento"
-          value={item.cedula_identidad}
+          value={item?.cedula_identidad}
           color="sky"
         />
 
         <InfoChip
           icon={HeartIcon}
           label="Parentesco"
-          value={item.parentesco.split('-')[1]?.trim()}
+          value={item?.parentesco.split('-')[1]?.trim()}
           color="pink"
         />
 

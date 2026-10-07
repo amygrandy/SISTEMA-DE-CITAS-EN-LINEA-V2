@@ -12,6 +12,12 @@ import { HorarioHabilitacionSchema } from '../schema/HorarioHabilitacion.schema'
 import ConfirmModal from '../../../components/ConfirmModal';
 import { MODALS, useModalManager } from '../../../hooks/useModalManager';
 
+const formatearHora = (hora) => {
+  if (!hora) return '';
+
+  return hora.substring(0, 5);
+};
+
 export default function ControlInasistenciaPage() {
   const [form, setForm] = useState({});
   const [loading, setLoading] = useState(false);
@@ -27,7 +33,11 @@ export default function ControlInasistenciaPage() {
       if (!response.ok) {
         throw new Error(response.message || 'No se pudo obtener el registro');
       }
-      setForm(response.data);
+      setForm({
+        ...response.data,
+        hora_inicio: formatearHora(response?.data?.hora_inicio),
+        hora_final: formatearHora(response?.data?.hora_final),
+      });
     } catch (e) {
       if (e instanceof Error) {
         return toast.error(e.message || 'No se pudo obtener el registro');

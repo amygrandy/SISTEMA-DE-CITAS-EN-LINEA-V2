@@ -9,6 +9,8 @@ import {
 } from '@heroicons/react/24/outline';
 
 import ServiceCard from '../../components/ServiceCard';
+import { MODALS, useModalManager } from '../../../../hooks/useModalManager';
+import SeleccionarPaciente from '../../components/SeleccionarPaciente';
 import { useState } from 'react';
 
 import { useAuth } from '../../../../context/AuthContext';
@@ -26,7 +28,6 @@ const servicios = [
     description: 'Registro de nuevas citas médicas',
     icon: CalendarDaysIcon,
     variant: 'green',
-    path: '/paciente/especialidades',
   },
   {
     id: 2,
@@ -34,7 +35,6 @@ const servicios = [
     description: 'Reservas de citas médicas pendientes',
     icon: ClipboardDocumentCheckIcon,
     variant: 'blue',
-    path: '/agenda-medica/programaciones',
   },
   {
     id: 3,
@@ -42,15 +42,61 @@ const servicios = [
     description: 'Historial de citas médicas',
     icon: ClipboardDocumentListIcon,
     variant: 'green',
-    path: '/agenda-medica/historial',
   },
 ];
 
 export default function PanelInformativoPage() {
-  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+  const { closeModal, isModalOpen, modalState, openModal } = useModalManager();
 
   const { usuario } = useAuth();
+
+  const handleIrEspecialidad = (id) => {
+    switch (id) {
+      case 1:
+        navigate('/paciente/especialidades');
+        break;
+
+      case 2:
+        openModal(MODALS.POGRAMACIONES_CITAS);
+        break;
+
+      case 3:
+        openModal(MODALS.HISOTRIAL_CITAS);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleOpciones = (asegurado) => {
+    switch (modalState.type) {
+      case MODALS.POGRAMACIONES_CITAS:
+        navigate('/paciente/programaciones-realizadas', {
+          state: {
+            ...asegurado,
+            tipo: 'PROGRAMACIONES REALIZADAS',
+          },
+        });
+        break;
+
+      case MODALS.HISOTRIAL_CITAS:
+        navigate('/paciente/historial', {
+          state: {
+            ...asegurado,
+            tipo: 'HISTORIAL CITAS',
+          },
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
+  const modalPacienteAbierto =
+    isModalOpen(MODALS.POGRAMACIONES_CITAS) ||
+    isModalOpen(MODALS.HISOTRIAL_CITAS);
 
   return (
     <>
@@ -152,7 +198,7 @@ export default function PanelInformativoPage() {
                     description={servicio.description}
                     icon={servicio.icon}
                     variant={servicio.variant}
-                    onClick={() => navigate(servicio.path)}
+                    onClick={() => handleIrEspecialidad(servicio.id)}
                   />
                 ))}
               </div>
@@ -160,6 +206,11 @@ export default function PanelInformativoPage() {
           </div>
         </div>
       </div>
+      <SeleccionarPaciente
+        open={modalPacienteAbierto}
+        onClose={closeModal}
+        onConfirm={handleOpciones}
+      />
     </>
   );
 }
