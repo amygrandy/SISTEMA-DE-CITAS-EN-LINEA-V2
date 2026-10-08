@@ -9,6 +9,8 @@ module.exports = {
       {
         id: 1,
         cantidad_ficha_por_asgurado: 3,
+        dias_espera_ficha: 1,
+        tiempo_para_cancelar_ficha: 30,
         createdAt: now,
         updatedAt: now,
       },

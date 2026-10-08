@@ -25,6 +25,7 @@ export default function HistorialPage() {
         const response = await HistorialServices.getHistoria({
           id: state.idpoblacion,
         });
+
         if (!response.ok) {
           throw new Error(
             response.message || 'No se pudo obtener el historial',

@@ -129,11 +129,27 @@ export default function CantidadBeneficiairosPage() {
       </div>
       <div className="grid flex-1 gap-7 overflow-y-auto px-7 py-7 lg:grid-cols-3 bg-white">
         <InputComponent
-          label={'Cantidad de fichas por asgurado'}
+          label={'Cantidad de fichas por asegurados por dia'}
           name={'cantidad_ficha_por_asgurado'}
           value={form.cantidad_ficha_por_asgurado}
           onChange={handleChange}
           error={error?.cantidad_ficha_por_asgurado}
+          type="number"
+        />
+        <InputComponent
+          label={'Tiempo para cancelar la ficha expresado en minutos'}
+          name={'tiempo_para_cancelar_ficha'}
+          value={form.tiempo_para_cancelar_ficha}
+          onChange={handleChange}
+          error={error?.tiempo_para_cancelar_ficha}
+          type="number"
+        />
+        <InputComponent
+          label={'Tiempo de espera despues de sacar ficha expresado en dias'}
+          name={'dias_espera_ficha'}
+          value={form.dias_espera_ficha}
+          onChange={handleChange}
+          error={error?.dias_espera_ficha}
           type="number"
         />
       </div>

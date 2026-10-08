@@ -24,21 +24,21 @@ const formatearNombre = (str = '') =>
 const servicios = [
   {
     id: 1,
-    title: 'Citas Médicas',
+    title: 'Agendar citas',
     description: 'Registro de nuevas citas médicas',
     icon: CalendarDaysIcon,
     variant: 'green',
   },
   {
     id: 2,
-    title: 'Programaciones Realizadas',
-    description: 'Reservas de citas médicas pendientes',
+    title: 'Citas Programadas',
+    description: 'Reservas de citas médicas',
     icon: ClipboardDocumentCheckIcon,
     variant: 'blue',
   },
   {
     id: 3,
-    title: 'Historial',
+    title: 'Historial de Citas',
     description: 'Historial de citas médicas',
     icon: ClipboardDocumentListIcon,
     variant: 'green',
@@ -73,7 +73,7 @@ export default function PanelInformativoPage() {
   const handleOpciones = (asegurado) => {
     switch (modalState.type) {
       case MODALS.POGRAMACIONES_CITAS:
-        navigate('/paciente/programaciones-realizadas', {
+        navigate('/paciente/fichas-programadas', {
           state: {
             ...asegurado,
             tipo: 'PROGRAMACIONES REALIZADAS',

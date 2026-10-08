@@ -44,4 +44,8 @@ export const reservarFichaSchema = z.object({
   idcobertura: reqInteger({ label: 'Cobertura' }),
   nombre_doctor: reqString({ field: 'Nombre doctor' }),
   codigo: reqString({ field: 'Codigo' }),
+  codigo_asegurado: reqString({ field: 'Codigo asegurado' }),
+  //
+  matricula: reqString({ field: 'Matricula' }),
+  fechaAtencion: reqString({ field: 'Fecha atencion' }),
 });

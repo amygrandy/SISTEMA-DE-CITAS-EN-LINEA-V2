@@ -64,7 +64,7 @@ export default function AgendaMedica() {
   const handleOpciones = (asegurado) => {
     switch (modalState.type) {
       case MODALS.POGRAMACIONES_CITAS:
-        navigate('/paciente/programaciones-realizadas', {
+        navigate('/paciente/fichas-programadas', {
           state: {
             ...asegurado,
             tipo: 'PROGRAMACIONES REALIZADAS',

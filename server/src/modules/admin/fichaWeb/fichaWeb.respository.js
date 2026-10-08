@@ -1,4 +1,5 @@
 import { FichaWebModel } from '../../../models/fichaWeb.model.js';
+import { Op } from 'sequelize';
 
 export class FichaWebRepository {
   static async getCantidadFichasByAsegurado({ fecha, codigo_asegurado }) {

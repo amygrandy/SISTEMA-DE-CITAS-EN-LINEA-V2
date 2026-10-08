@@ -59,12 +59,14 @@ export class AseguradoRepository {
         LTRIM(RTRIM(he.est_nombre)) as establecieminto,
         hpa.idcobertura,
         hp.pac_codigo,
-        LTRIM(RTRIM(hc.cua_sigla)) as cua_sigla
+        LTRIM(RTRIM(hc.cua_sigla)) as cua_sigla,
+        hp.pac_numero_historia as codigo_asegurado
         FROM bdhistoriasclinicas.dbo.hcl_poblacion hp 
         INNER JOIN bdhistoriasclinicas.dbo.hcl_poblacion_afiliacion hpa  on hp.idpoblacion =hpa.idpoblacion 
         INNER JOIN bdhistoriasclinicas.dbo.hcl_cuaderno hc on hc.idCuaderno = hpa.idcuaderno 
         INNER JOIN bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = hpa.idcentroasignado  
-        WHERE hp.pac_numero_historia  = @matricula;`,
+        WHERE hp.pac_numero_historia  = @matricula
+        ORDER BY hp.idpoblacion asc;`,
       );
 
     if (data.recordsets[0].length == 0) {

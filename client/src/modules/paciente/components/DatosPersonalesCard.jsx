@@ -91,12 +91,6 @@ export default function DatosPersonalesCard({ data }) {
               label="Fecha Nacimiento"
               value={data?.fechaNacimiento}
             />
-
-            <InfoItem
-              icon={CalendarDaysIcon}
-              label="Fecha Afiliación"
-              value={data?.fechaAfiliacion}
-            />
           </div>
         </div>
       </div>

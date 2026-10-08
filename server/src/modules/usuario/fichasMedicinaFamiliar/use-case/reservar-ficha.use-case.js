@@ -22,8 +22,11 @@ export class ReservarFichaUseCase {
     establecimiento_id,
     establecieminto,
     idcobertura,
+    nombre_doctor,
     codigo,
     codigo_asegurado,
+    matricula,
+    fechaAtencion,
   }) {
     const t = await sequelize.transaction();
 
@@ -48,7 +51,7 @@ export class ReservarFichaUseCase {
         transaction: t,
       });
       if (tieneFichaEseDia) {
-        const err = new Error('Ya tienes fichas para ese dia!!');
+        const err = new Error('Ya tienes fichas para ese dia!! mio');
         err.statusCode = 409;
         throw err;
       }
@@ -75,6 +78,7 @@ export class ReservarFichaUseCase {
         err.statusCode = 404;
         throw err;
       }
+
       //
       const [affectedRows] = await cupoFichaModel.update(
         {
@@ -116,6 +120,10 @@ export class ReservarFichaUseCase {
 
           establecimiento_id,
           establecieminto,
+          nombre_doctor,
+          matricula,
+          fechaAtencion,
+          codigo_asegurado,
 
           estado: 'PENDIENTE',
         },

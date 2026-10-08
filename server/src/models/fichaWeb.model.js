@@ -28,6 +28,8 @@ export const FichaWebModel = sequelize.define(
     establecimiento_id: { type: DataTypes.INTEGER, allowNull: false },
     establecieminto: { type: DataTypes.STRING, allowNull: false },
     nombre_doctor: { type: DataTypes.STRING },
+    fechaAtencion: { type: DataTypes.STRING },
+    matricula: { type: DataTypes.STRING },
 
     estado: { type: DataTypes.ENUM('PENDIENTE', 'CONFIRMADA') },
     asistio_a_la_cita: {

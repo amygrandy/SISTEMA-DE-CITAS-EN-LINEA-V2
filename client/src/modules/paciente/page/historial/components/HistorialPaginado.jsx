@@ -67,7 +67,7 @@ export default function HistorialPaginado({
       <div className="space-y-4">
         {consultasPaginadas.map((consulta, index) => (
           <HistorialCard
-            key={`${consulta?.fip_fecha_ini}-${index}`}
+            key={`${consulta?.fecha}-${index}`}
             consulta={consulta}
           />
         ))}

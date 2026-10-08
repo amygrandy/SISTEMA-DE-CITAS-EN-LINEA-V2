@@ -36,6 +36,7 @@ import EstablecimientosPage from './modules/paciente/page/Establecimientos/Estab
 import EspecialidadesPage from './modules/paciente/page/agendaMedica/especialidades/page/EspecialidadesPage';
 import SeleccionarFechaHoraPage from './modules/paciente/page/agendaMedica/especialidades/page/SeleccionarFechaHoraPage';
 import SeleccionarHorariosOdontologiaPage from './modules/paciente/page/agendaMedica/especialidades/page/SeleccionarHorariosOdontologiaPage';
+import FichasProgramadasPage from './modules/paciente/page/fichasProgramadas/page/FichasProgramadasPage';
 //
 import ParametroGlobales from './modules/parametroGlobales/ParametroGlobales.tab';
 //
@@ -62,7 +63,6 @@ function App() {
           <Route path="/admin-login" element={<AdminLoginPage />} />
           <Route element={<ProtectedRouteAdmin />}>
             <Route element={<AdminRoute />}>
-              {' '}
               <Route path="/admin" element={<AdminLayaout />}>
                 <Route
                   index
@@ -103,6 +103,10 @@ function App() {
                 <Route path="perfil" element={<PerfilPage />} />
                 <Route path="familia" element={<FamiliaPage />} />
                 <Route path="historial" element={<HistorialPage />} />
+                <Route
+                  path="fichas-programadas"
+                  element={<FichasProgramadasPage />}
+                />
                 <Route path="beneficiario" element={<BeneficiariosPage />} />
                 <Route path="agenda-medica" element={<AgendaMedica />} />{' '}
                 <Route path="especialidades" element={<EspecialidadesPage />} />

@@ -55,6 +55,8 @@ export default function SeleccionarFechaHora() {
   //
   const [openModal, setOpenModal] = useState(false);
 
+  const [refreshDisponibilidad, setRefreshDisponibilidad] = useState(0);
+
   // =========================================================
   // INFORMACIÓN RECIBIDA
   // =========================================================
@@ -130,7 +132,7 @@ export default function SeleccionarFechaHora() {
     return () => {
       ignorarRespuesta = true;
     };
-  }, [state?.idcuaderno, state?.idestablecimiento]);
+  }, [state?.idcuaderno, state?.idestablecimiento, refreshDisponibilidad]);
 
   // =========================================================
   // CARGAR HORARIOS CUANDO SE SELECCIONA UNA FECHA
@@ -275,11 +277,16 @@ export default function SeleccionarFechaHora() {
         idcobertura: state.idcobertura,
         //
         codigo: `${state.cua_sigla} ${horaSeleccionada.fip_numero}`,
+        codigo_asegurado: state.codigo_asegurado,
+        //
+        matricula: state.pac_codigo,
+        fechaAtencion: `${fechaSeleccionada.fecha} ${horaSeleccionada.fip_fecha_ini}`,
       };
 
       const response = await MedicianaFamiliarServices.reservarFicha({
         payload: data,
       });
+
       if (!response.ok) {
         setOpenModal(false);
         throw new Error(response.message || 'No se pudo sacar la ficha');
@@ -304,6 +311,8 @@ export default function SeleccionarFechaHora() {
         año: anio,
       });
       setOpenModal(false);
+      setRefreshDisponibilidad((current) => current + 1);
+      toast.success('Ficha reservada correctamente');
     } catch (e) {
       toast.error(
         e instanceof Error

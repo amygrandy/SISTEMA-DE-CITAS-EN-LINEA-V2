@@ -144,3 +144,56 @@ export const obtenerFechasHabilitadas = ({
 
 //   return fechas;
 // };
+
+export const obtenerFechaHoy = () => {
+  const fecha = new Date();
+
+  const anio = fecha.getFullYear();
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const dia = String(fecha.getDate()).padStart(2, '0');
+
+  return `${anio}-${mes}-${dia}`;
+};
+
+export const separarFechaHora = (valor) => {
+  if (!valor) {
+    return {
+      fecha: null,
+      hora: null,
+    };
+  }
+
+  const fechaISO = valor instanceof Date ? valor.toISOString() : String(valor);
+
+  const [fecha, tiempo] = fechaISO.split('T');
+
+  return {
+    fecha,
+    hora: tiempo.slice(0, 5),
+  };
+};
+
+export const formatearFechaDos = (valor) => {
+  if (!valor) return '';
+
+  const fecha = valor instanceof Date ? valor : new Date(valor);
+
+  const meses = [
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre',
+  ];
+
+  return `${fecha.getUTCDate()} de ${
+    meses[fecha.getUTCMonth()]
+  } del ${fecha.getUTCFullYear()}`;
+};

@@ -8,6 +8,12 @@ export class GetFichasHistorialUseCase {
       throw err;
     }
 
-    return data;
+    const dataNorm = data.map((row) => {
+      const [fecha, horaCompleta] = fechaHora.split(' ');
+
+      return { ...row, fecha, horaCompleta };
+    });
+
+    return dataNorm;
   }
 }

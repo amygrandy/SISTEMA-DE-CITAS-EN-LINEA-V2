@@ -3,7 +3,11 @@ import { CantidadBeneficiariosModel } from '../../../models/cantidadBeneficiario
 export class CantidadBeneficiariosRepository {
   static async getById({ id = 1, transaction = null } = {}) {
     const data = await CantidadBeneficiariosModel.findByPk(id, {
-      attributes: ['cantidad_ficha_por_asgurado'],
+      attributes: [
+        'cantidad_ficha_por_asgurado',
+        'dias_espera_ficha',
+        'tiempo_para_cancelar_ficha',
+      ],
       transaction,
       raw: true,
     });
