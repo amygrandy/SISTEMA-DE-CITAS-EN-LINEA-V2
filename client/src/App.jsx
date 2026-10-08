@@ -1,4 +1,10 @@
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  Navigate,
+  Outlet,
+} from 'react-router-dom';
 
 import LoginPage from './modules/login/Login';
 import SacarFichaMedica from './modules/home/PortalPaciente';
@@ -32,49 +38,87 @@ import SeleccionarFechaHoraPage from './modules/paciente/page/agendaMedica/espec
 import SeleccionarHorariosOdontologiaPage from './modules/paciente/page/agendaMedica/especialidades/page/SeleccionarHorariosOdontologiaPage';
 //
 import ParametroGlobales from './modules/parametroGlobales/ParametroGlobales.tab';
+//
+import AdminLoginPage from './modules/AdminLogin/AdminLoginPage';
+import { AuthProvider } from './context/AuthContext';
+import { AuthProviderAdmin } from './context/AuthContext.admin';
+//
+import ProtectedRouteAdmin from './routes/admin/ProtectedRoutes';
+import AdminRoute from './routes/admin/AdminRoute';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
         {/* <Route path="/paciente" element={<SacarFichaMedica />} /> */}
-        <Route path="/ejemplo" element={<ServiciosDisponiblesPage />} />
-        <Route path="/admin" element={<AdminLayaout />}>
-          <Route index element={<Navigate to="establecimientos" replace />} />
-          <Route path="establecimientos" element={<EstablecimientoPage />} />
-          <Route path="consultorios" element={<ConsultorioTab />} />
-          <Route path="parametros-globales" element={<ParametroGlobales />} />
+        {/* <Route path="/ejemplo" element={<ServiciosDisponiblesPage />} /> */}
+        <Route
+          element={
+            <AuthProviderAdmin>
+              <Outlet />
+            </AuthProviderAdmin>
+          }
+        >
+          <Route path="/admin-login" element={<AdminLoginPage />} />
+          <Route element={<ProtectedRouteAdmin />}>
+            <Route element={<AdminRoute />}>
+              {' '}
+              <Route path="/admin" element={<AdminLayaout />}>
+                <Route
+                  index
+                  element={<Navigate to="establecimientos" replace />}
+                />
+                <Route
+                  path="establecimientos"
+                  element={<EstablecimientoPage />}
+                />
+                <Route path="consultorios" element={<ConsultorioTab />} />
+                <Route
+                  path="parametros-globales"
+                  element={<ParametroGlobales />}
+                />
+              </Route>
+            </Route>
+          </Route>
         </Route>
-        <Route element={<ProtectedRoutes />}>
-          <Route element={<UsuarioNormaRoute />}>
-            <Route path="/paciente" element={<PacienteLayaout />}>
-              <Route
-                index
-                element={<Navigate to="panel-informativo" replace />}
-              />
-              <Route
-                path="panel-informativo"
-                element={<PanelInformativoPage />}
-              />
-              <Route path="perfil" element={<PerfilPage />} />
-              <Route path="familia" element={<FamiliaPage />} />
-              <Route path="historial" element={<HistorialPage />} />
-              <Route path="beneficiario" element={<BeneficiariosPage />} />
-              <Route path="agenda-medica" element={<AgendaMedica />} />{' '}
-              <Route path="especialidades" element={<EspecialidadesPage />} />
-              <Route
-                path="seleccionar-fecha"
-                element={<SeleccionarFechaHoraPage />}
-              />
-              <Route
-                path="seleccionar-fecha-odontologia"
-                element={<SeleccionarHorariosOdontologiaPage />}
-              />
-              <Route
-                path="centros-medicos"
-                element={<EstablecimientosPage />}
-              />
+        <Route
+          element={
+            <AuthProvider>
+              <Outlet />
+            </AuthProvider>
+          }
+        >
+          <Route path="/" element={<LoginPage />} />
+          <Route element={<ProtectedRoutes />}>
+            <Route element={<UsuarioNormaRoute />}>
+              <Route path="/paciente" element={<PacienteLayaout />}>
+                <Route
+                  index
+                  element={<Navigate to="panel-informativo" replace />}
+                />
+                <Route
+                  path="panel-informativo"
+                  element={<PanelInformativoPage />}
+                />
+                <Route path="perfil" element={<PerfilPage />} />
+                <Route path="familia" element={<FamiliaPage />} />
+                <Route path="historial" element={<HistorialPage />} />
+                <Route path="beneficiario" element={<BeneficiariosPage />} />
+                <Route path="agenda-medica" element={<AgendaMedica />} />{' '}
+                <Route path="especialidades" element={<EspecialidadesPage />} />
+                <Route
+                  path="seleccionar-fecha"
+                  element={<SeleccionarFechaHoraPage />}
+                />
+                <Route
+                  path="seleccionar-fecha-odontologia"
+                  element={<SeleccionarHorariosOdontologiaPage />}
+                />
+                <Route
+                  path="centros-medicos"
+                  element={<EstablecimientosPage />}
+                />
+              </Route>
             </Route>
           </Route>
         </Route>

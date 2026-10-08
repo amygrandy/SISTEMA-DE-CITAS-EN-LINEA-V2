@@ -66,6 +66,24 @@ class RolRepository {
       ],
     });
   }
+  static async getRolWithPermisos({ id, transaction = null }) {
+    const data = await RolModel.findByPk(id, {
+      include: [
+        {
+          model: PermisoModel,
+          as: 'permisos',
+          attributes: ['codigo_permiso'],
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
+    if (!data) {
+      return null;
+    }
+    return data;
+  }
 }
 
 export default RolRepository;

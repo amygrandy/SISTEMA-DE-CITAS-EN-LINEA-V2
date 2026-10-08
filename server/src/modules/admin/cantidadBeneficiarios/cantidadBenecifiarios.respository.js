@@ -5,6 +5,7 @@ export class CantidadBeneficiariosRepository {
     const data = await CantidadBeneficiariosModel.findByPk(id, {
       attributes: ['cantidad_ficha_por_asgurado'],
       transaction,
+      raw: true,
     });
     if (!data) {
       return null;

@@ -158,6 +158,7 @@ export default function ConfiguracionFichasModal({
           payload: formSave,
         });
         if (!response.ok) {
+          setOpenModal(false);
           throw new Error(response.message || 'No se pudo gardar');
         }
         toast.success(

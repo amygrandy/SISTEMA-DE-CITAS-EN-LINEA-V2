@@ -1,5 +1,6 @@
 import { getConnection, sql } from '../../../sqlserverSIAIS/database.js';
-import { cupoFichaModel } from '../../../models/cupoFichas.model.js';
+import { Op } from 'sequelize';
+import { FichaWebModel } from '../../../models/fichaWeb.model.js';
 
 export class FichasMedicinaFalimiarRepository {
   static async getFichasHistorial(payload) {
@@ -30,6 +31,39 @@ export class FichasMedicinaFalimiarRepository {
     }
 
     return data.recordsets[0];
+  }
+  static async getFichasProgramadas({ cuaderno_id, poblacion_id }) {
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate());
+
+    const fechaManana = [
+      fecha.getFullYear(),
+      String(fecha.getMonth() + 1).padStart(2, '0'),
+      String(fecha.getDate()).padStart(2, '0'),
+    ].join('-');
+
+    const data = await FichaWebModel.findAll({
+      attributes: [
+        'id',
+        'fecha',
+        'fecha_ini',
+        'nombre_completo',
+        'cedula_identidad',
+        'cuaderno_id',
+        'consultorio',
+        'establecieminto',
+        'nombre_doctor',
+      ],
+      where: {
+        fecha: {
+          [Op.gte]: fechaManana,
+        },
+        cuaderno_id,
+        poblacion_id,
+        asistio_a_la_cita: 'POR_ASISTIR',
+      },
+    });
+    return data;
   }
   static async getFechasByCuaderno({
     fecha_inicial,

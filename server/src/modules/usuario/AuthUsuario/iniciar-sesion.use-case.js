@@ -18,7 +18,9 @@ class IniciarSesionUseCase {
     }
 
     if (data.cedula_indentidad != contrasenia) {
-      const err = new Error('Credenciales incorrectas');
+      const err = new Error(
+        'No se pudo validar sus datos de acces. por favor, dirjase al Servicio de Vigencia de Derechos para la revision de su informacion registrada',
+      );
       err.statusCode = 409;
       throw err;
     }

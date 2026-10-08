@@ -8,6 +8,7 @@ import {
   EyeSlashIcon,
   IdentificationIcon,
   LockClosedIcon,
+  ShieldCheckIcon,
   TicketIcon,
   UserIcon,
 } from '@heroicons/react/24/outline';
@@ -314,6 +315,28 @@ export default function Login() {
                 {loading ? 'CARGANDO....' : 'INICIAR SESION'}
               </button>
             </form>
+            <div className="mt-7">
+              {/* SEPARADOR */}
+              <div className="mb-5 flex items-center gap-4">
+                <div className="h-px flex-1 bg-slate-200" />
+
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  Acceso institucional
+                </span>
+
+                <div className="h-px flex-1 bg-slate-200" />
+              </div>
+
+              {/* BOTÓN ADMIN */}
+              <button
+                type="button"
+                onClick={() => navigate('/admin-login')}
+                className="group flex h-12 w-full items-center justify-center gap-2.5 rounded-xl border border-[#24534C]/25 bg-[#F4F8F7] px-5 text-sm font-semibold text-[#24534C] transition duration-200 hover:border-[#24534C]/40 hover:bg-[#E8F1EF] focus:outline-none focus:ring-4 focus:ring-[#24534C]/10"
+              >
+                <ShieldCheckIcon className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+                INICIAR SESIÓN COMO ADMINISTRADOR
+              </button>
+            </div>
           </div>
 
           {/* FOOTER MOBILE */}

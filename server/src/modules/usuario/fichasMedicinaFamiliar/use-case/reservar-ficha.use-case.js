@@ -1,6 +1,8 @@
 import { FichasMedicinaFalimiarRepository } from '../FichasMedicinaFamiliar.repository.js';
 import { HorarioHabilitacionRespository } from '../../../admin/horarioHabilitacion/horarioHabilitacion.repository.js';
 import { cupoFichaModel } from '../../../../models/cupoFichas.model.js';
+import { CantidadBeneficiariosRepository } from '../../../admin/cantidadBeneficiarios/cantidadBenecifiarios.respository.js';
+import { FichaWebRepository } from '../../../admin/fichaWeb/fichaWeb.respository.js';
 import { FichaWebModel } from '../../../../models/fichaWeb.model.js';
 import { sequelize } from '../../../../config/database.js';
 import { Op } from 'sequelize';
@@ -21,6 +23,7 @@ export class ReservarFichaUseCase {
     establecieminto,
     idcobertura,
     codigo,
+    codigo_asegurado,
   }) {
     const t = await sequelize.transaction();
 
@@ -49,6 +52,29 @@ export class ReservarFichaUseCase {
         err.statusCode = 409;
         throw err;
       }
+
+      const cantidadBeneficiarioPorDia =
+        await CantidadBeneficiariosRepository.getById();
+      if (!cantidadBeneficiarioPorDia) {
+        const err = new Error('No se encontro la cantidad de beneficiairos');
+        err.statusCode = 404;
+        throw err;
+      }
+
+      const hoyCantidadBeneficiarios =
+        await FichaWebRepository.getCantidadFichasByAsegurado({
+          codigo_asegurado,
+          fecha,
+        });
+
+      const limite = cantidadBeneficiarioPorDia.cantidad_ficha_por_asgurado;
+      if (hoyCantidadBeneficiarios >= limite) {
+        const err = new Error(
+          `Solo se pueden sacar ${limite} fichas por día por asegurado`,
+        );
+        err.statusCode = 404;
+        throw err;
+      }
       //
       const [affectedRows] = await cupoFichaModel.update(
         {
@@ -60,7 +86,7 @@ export class ReservarFichaUseCase {
             cuaderno_id,
             establecimiento_id,
 
-            [Op.and]: sequelize.literal('"reservas" <= "limite"'),
+            [Op.and]: sequelize.literal('"reservas" < "limite"'),
           },
           transaction: t,
         },

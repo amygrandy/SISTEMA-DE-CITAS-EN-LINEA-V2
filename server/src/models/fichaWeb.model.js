@@ -14,6 +14,7 @@ export const FichaWebModel = sequelize.define(
     fecha_ini: { type: DataTypes.DATE },
     fecha_final: { type: DataTypes.DATE },
 
+    codigo_asegurado: { type: DataTypes.STRING },
     codigo: { type: DataTypes.STRING },
 
     poblacion_id: { type: DataTypes.INTEGER, allowNull: false },
@@ -29,6 +30,10 @@ export const FichaWebModel = sequelize.define(
     nombre_doctor: { type: DataTypes.STRING },
 
     estado: { type: DataTypes.ENUM('PENDIENTE', 'CONFIRMADA') },
+    asistio_a_la_cita: {
+      type: DataTypes.ENUM('ASISTIO', 'FALTO', 'POR_ASISTIR'),
+      defaultValue: 'POR_ASISTIR',
+    },
   },
   {
     tableName: 'fichas_web',

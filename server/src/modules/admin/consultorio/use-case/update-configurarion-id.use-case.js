@@ -1,6 +1,8 @@
 import { ConsultorioRepository } from '../consultorio.repository.js';
 import { ConsultorioDiaSemanaRepository } from '../../consultorioDiaSemana/consultorioDiaSemana.repository.js';
 import { DiaSemanaRepository } from '../../diaSemana/diaSemana.respository.js';
+import { CupoFichasRepository } from '../../cuposFichas/CuposFichas.respository.js';
+import { sumarDias } from '../../../../shared/services/funciones.js';
 import { sequelize } from '../../../../config/database.js';
 
 export class updateConfigurationByIdUseCase {
@@ -13,10 +15,20 @@ export class updateConfigurationByIdUseCase {
           payload: parent,
           transaction: t,
         });
+
         if (!updated) {
           const err = new Error('No se econtro el consultorio');
           err.statusCode = 404;
           throw err;
+        }
+        const { cantidad_fichas_por_dia } = parent;
+
+        if (cantidad_fichas_por_dia) {
+          await CupoFichasRepository.actualizarLimiteDesdeManana({
+            cuadernoId: id,
+            establecimientoId: updated.fk_idestablecimiento,
+            limite: cantidad_fichas_por_dia,
+          });
         }
         if (dias_habilitados.length > 0) {
           const buscar_dias = await DiaSemanaRepository.getArrayById({

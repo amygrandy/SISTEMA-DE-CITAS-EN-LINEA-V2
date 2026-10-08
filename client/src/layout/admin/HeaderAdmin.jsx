@@ -9,6 +9,7 @@ import {
   UserCircleIcon,
   UserIcon,
 } from '@heroicons/react/24/outline';
+import { useAuth } from '../../context/AuthContext.admin';
 
 export default function HeaderAdmin({
   abrirMenu,
@@ -19,6 +20,7 @@ export default function HeaderAdmin({
 
   const [menuUsuarioOpen, setMenuUsuarioOpen] = useState(false);
 
+  const { logout } = useAuth();
   const menuUsuarioRef = useRef(null);
 
   // Cerrar el dropdown cuando se hace click fuera
@@ -54,12 +56,8 @@ export default function HeaderAdmin({
 
   const handleCerrarSesion = () => {
     setMenuUsuarioOpen(false);
-
-    console.log('Cerrar sesión');
-
-    // Aquí posteriormente puedes:
-    // localStorage.removeItem('token');
-    // navigate('/login');
+    logout();
+    navigate('/');
   };
 
   return (
@@ -289,7 +287,7 @@ export default function HeaderAdmin({
                 <div className="p-2">
                   {/* PERFIL */}
 
-                  <button
+                  {/* <button
                     type="button"
                     onClick={handlePerfil}
                     className="
@@ -308,11 +306,11 @@ export default function HeaderAdmin({
                     <UserCircleIcon className="h-5 w-5" />
 
                     <span className="flex-1">Mi perfil</span>
-                  </button>
+                  </button> */}
 
                   {/* CONFIGURACIÓN */}
 
-                  <button
+                  {/* <button
                     type="button"
                     onClick={handleConfiguracion}
                     className="
@@ -331,7 +329,7 @@ export default function HeaderAdmin({
                     <Cog6ToothIcon className="h-5 w-5" />
 
                     <span className="flex-1">Configuración</span>
-                  </button>
+                  </button> */}
                 </div>
 
                 {/* CERRAR SESIÓN */}
