@@ -32,7 +32,7 @@ export class AseguradoRepository {
             ON hp.idestablecimiento = he.idestablecimiento
         INNER JOIN bdhistoriasclinicas.dbo.hcl_afiliacion_actual haa 
             ON hpa.idpoblacion = haa.idpoblacion
-        WHERE LTRIM(RTRIM(haa.pac_nro_asegurado)) = @matricula;`,
+        WHERE haa.pac_nro_asegurado = @matricula;`,
       );
 
     if (data.recordsets[0].length == 0) {

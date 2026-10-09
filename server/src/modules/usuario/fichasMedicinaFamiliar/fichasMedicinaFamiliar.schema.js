@@ -49,3 +49,12 @@ export const reservarFichaSchema = z.object({
   matricula: reqString({ field: 'Matricula' }),
   fechaAtencion: reqString({ field: 'Fecha atencion' }),
 });
+
+export const fichaByFechaSchema = z.object({
+  fecha: reqFecha({ label: 'Fecha' }),
+  poblacion_id: reqInteger({ label: 'poblacion_id' }),
+});
+
+export const removeFichasSchema = z.object({
+  paciente: reqString({ field: 'Paciente', max: 300 }),
+});

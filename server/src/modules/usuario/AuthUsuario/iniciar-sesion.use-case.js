@@ -16,9 +16,6 @@ class IniciarSesionUseCase {
       err.statusCode = 409;
       throw err;
     }
-    console.log('************');
-    console.log(data);
-    console.log('************');
 
     if (data.cedula_indentidad != contrasenia) {
       const err = new Error(

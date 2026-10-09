@@ -37,6 +37,8 @@ export default function HistorialPage() {
   const [loading, setLoading] = useState(false);
 
   const [loadingFicha, setLoadingFicha] = useState(false);
+  const [loadingRemove, setLoadingRemove] = useState(false);
+  const [refreshDisponibilidad, setRefreshDisponibilidad] = useState(0);
 
   useEffect(() => {
     try {
@@ -63,7 +65,7 @@ export default function HistorialPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [refreshDisponibilidad]);
 
   const handleFicha = async (data) => {
     try {
@@ -74,7 +76,6 @@ export default function HistorialPage() {
       if (!response.ok) {
         throw new Error(response.message || 'No se encontro la ficha');
       }
-      console.log(response.data);
 
       const responseData = response.data;
 
@@ -102,6 +103,24 @@ export default function HistorialPage() {
       );
     } finally {
       setLoadingFicha(false);
+    }
+  };
+
+  const handleRemoveFicha = async (data) => {
+    try {
+      setLoadingRemove(true);
+      const cadena = `${data.cedula_indentidad} ${data.consultorio} ${data.establecimiento} ${data.estado_descripcion} ${data.fecha} ${data.fip_fecha_ini} ${data.hora} ${data.idCuaderno} ${data.idestablecimiento} ${data.idfichaprogramada} ${data.medico} ${data.nombre_paciente} ${data.pac_codigo}`;
+      const response = await Services.removeFichaProgramada({
+        id: data.idfichaprogramada,
+        payload: { paciente: cadena },
+      });
+      if (!response.ok) {
+        throw new Error(response.message || 'No se pudo eliminar la ficha');
+      }
+      setRefreshDisponibilidad((current) => current + 1);
+    } catch (e) {
+    } finally {
+      setLoadingRemove(false);
     }
   };
 
@@ -176,6 +195,7 @@ export default function HistorialPage() {
           registrosPorPagina={5}
           loading={loading}
           loadingFicha={loadingFicha}
+          cancelarFicha={handleRemoveFicha}
         />
       </div>
     </main>

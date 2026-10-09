@@ -18,6 +18,7 @@ export const validateRequest = ({
       }
 
       if (bodySchema) {
+        console.log(req.body);
         validated.body = await bodySchema.parseAsync(req.body);
       }
 

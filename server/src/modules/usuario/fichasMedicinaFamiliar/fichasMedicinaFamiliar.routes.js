@@ -11,6 +11,8 @@ import {
   FechasCuadernoSchema,
   HorariasCuadernoSchema,
   reservarFichaSchema,
+  fichaByFechaSchema,
+  removeFichasSchema,
 } from './fichasMedicinaFamiliar.schema.js';
 
 const routes = new Router();
@@ -45,6 +47,19 @@ routes
     '/reservar-ficha',
     validateRequest({ bodySchema: reservarFichaSchema }),
     asyncHandler(FichasMedicinaFamiliarController.reservarFicha),
+  )
+  .post(
+    '/obtener-ficha-por-fecha',
+    validateRequest({ bodySchema: fichaByFechaSchema }),
+    asyncHandler(FichasMedicinaFamiliarController.getFichaByFecha),
+  )
+  .post(
+    '/remove-ficha/:id',
+    validateRequest({
+      paramsSchema: idParamSchema,
+      bodySchema: removeFichasSchema,
+    }),
+    asyncHandler(FichasMedicinaFamiliarController.removeFichas),
   );
 
 export default routes;

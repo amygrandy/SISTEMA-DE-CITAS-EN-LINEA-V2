@@ -24,7 +24,7 @@ const tabs = [
     icon: XCircleIcon,
   },
   {
-    label: 'ZONIFICAR CONSULTORIOS',
+    label: 'RELACION DE  CONSULTORIOS',
     value: 'ZonificacionPage',
     icon: XCircleIcon,
   },

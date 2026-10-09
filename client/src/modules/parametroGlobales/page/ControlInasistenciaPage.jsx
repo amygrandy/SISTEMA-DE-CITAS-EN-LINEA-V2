@@ -129,7 +129,7 @@ export default function ControlInasistenciaPage() {
       </div>
       <div className="grid flex-1 gap-7 overflow-y-auto px-7 py-7 lg:grid-cols-3 bg-white">
         <InputComponent
-          label={'Cantidad de inasistencia maximos por beneficiario'}
+          label="Máximo de inasistencias permitidas por beneficiario"
           name={'cantidad_inasistencia'}
           value={form.cantidad_inasistencia}
           onChange={handleChange}
@@ -137,7 +137,7 @@ export default function ControlInasistenciaPage() {
           type="number"
         />
         <InputComponent
-          label={'Rango de dias'}
+          label="Rango de días a evaluar"
           name={'rango_dias'}
           value={form.rango_dias}
           onChange={handleChange}
@@ -145,7 +145,7 @@ export default function ControlInasistenciaPage() {
           type="number"
         />
         <InputComponent
-          label={'Sacion por dias'}
+          label="Días de sanción al superar el máximo de inasistencias"
           name={'sancion_dias'}
           value={form.sancion_dias}
           onChange={handleChange}

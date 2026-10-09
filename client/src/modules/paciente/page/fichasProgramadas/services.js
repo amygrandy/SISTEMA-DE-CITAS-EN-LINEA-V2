@@ -22,4 +22,16 @@ export class FichasProgramadasServices {
       return toServiceError(e);
     }
   }
+
+  static async removeFichaProgramada({ id, payload }) {
+    try {
+      const response = await api.post(
+        `/usuario/fichas-medicina-familiar/remove-ficha/${id}`,
+        payload,
+      );
+      return response.data;
+    } catch (e) {
+      return toServiceError(e);
+    }
+  }
 }

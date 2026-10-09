@@ -4,6 +4,8 @@ import { getHorariasByFechaByCuadernoUseCase } from './use-case/get-horarios-cua
 import { ReservarFichaUseCase } from './use-case/reservar-ficha.use-case.js';
 import { GetFichasProgramadasUseCase } from './use-case/get-fichas-programadas.use-case.js';
 import { GetByIdUseCase } from './use-case/get-id.use-case.js';
+import { GetFichaByFechaUseCase } from './use-case/get-ficha-by-fecha.use-case.js';
+import { RemoveFichasUseCase } from './use-case/remove-ficha.use-case.js';
 
 export class FichasMedicinaFamiliarController {
   static async getFichasLibres(req, res) {
@@ -39,10 +41,6 @@ export class FichasMedicinaFamiliarController {
     });
   }
   static async reservarFicha(req, res) {
-    console.log('************');
-    console.log(req.validated);
-    console.log('************');
-
     const data = await ReservarFichaUseCase.execute({
       cedula_identidad: req.validated.body.cedula_identidad,
       consultorio: req.validated.body.consultorio,
@@ -85,6 +83,28 @@ export class FichasMedicinaFamiliarController {
     return res.status(200).json({
       ok: true,
       message: 'Se obtuvo correctamente las ficha programadas',
+      data,
+    });
+  }
+  static async getFichaByFecha(req, res) {
+    const data = await GetFichaByFechaUseCase.execute({
+      fecha: req.validated.body.fecha,
+      poblacion_id: req.validated.body.poblacion_id,
+    });
+    return res.status(200).json({
+      ok: true,
+      message: 'Se obtuvo correctamente la ficha',
+      data,
+    });
+  }
+  static async removeFichas(req, res) {
+    const data = await RemoveFichasUseCase.execute({
+      id: req.validated.params.id,
+      payload: req.validated.body.paciente,
+    });
+    return res.status(200).json({
+      ok: true,
+      message: 'Se elimino correctamente la ficha',
       data,
     });
   }

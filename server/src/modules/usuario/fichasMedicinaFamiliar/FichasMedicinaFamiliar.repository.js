@@ -191,33 +191,37 @@ export class FichasMedicinaFalimiarRepository {
           LTRIM(RTRIM(hps.per_campo1)) + ' ' +
           LTRIM(RTRIM(hps.per_campo2)) AS medico,
           LTRIM(RTRIM(hc.cua_nombre)) AS consultorio,
+          hc.idCuaderno,
           ffp.fip_fecha_ini,
           CASE ffp.fip_estado
-              WHEN 'L' THEN 'Libre'
-              WHEN 'A' THEN 'FALTA'
-              WHEN 'T' THEN 'ATENDIDO'
-              WHEN 'N' THEN 'FALTA'
-              WHEN 'V' THEN 'FALTA'
-              WHEN 'D' THEN 'FALTA'
-              WHEN 'M' THEN 'FALTA'
-              WHEN 'R' THEN 'FALTA'
+            WHEN 'V' THEN 'Visita a domicilio'
+          WHEN 'D' THEN 'No acude el paciente'
+          WHEN 'M' THEN 'Medico'
+          when 'R' then 'Web'
               ELSE 'Desconocido'
           END AS estado_descripcion,
-          LTRIM(RTRIM(hee.est_nombre)) AS establecimiento
-      FROM bdfichas.dbo.fic_fichas_programadas ffp,
-          bdhistoriasclinicas.dbo.hcl_personal_salud hps,
-          bdhistoriasclinicas.dbo.hcl_cuaderno hc,
-          bdhistoriasclinicas.dbo.hcl_citas hhh,
-          bdhistoriasclinicas.dbo.hcl_poblacion hpn,
-          bdhistoriasclinicas.dbo.hcl_establecimiento hee
-      WHERE hps.idpersonalmedico = ffp.idpersonal
-        AND hc.idCuaderno = ffp.idcuaderno
-        AND hhh.idcita = ffp.idcita
-        AND hpn.idpoblacion = hhh.idpoblacion
-        AND hee.idestablecimiento = hhh.idestablecimiento
-        AND hpn.idpoblacion = @id
-        AND ffp.fip_fecha_ini >= @fecha
-      ORDER BY ffp.fip_fecha_ini ASC;`);
+          LTRIM(RTRIM(hee.est_nombre)) AS establecimiento,
+          hee.idestablecimiento ,
+          LTRIM(RTRIM(hpn.pac_nombre))+' '+LTRIM(RTRIM(hpn.pac_primer_apellido))
+          +' '+ LTRIM(RTRIM(hpn.pac_segundo_apellido )) AS nombre_paciente,
+          hpn.pac_codigo,
+          hpn.pac_documento_id as cedula_indentidad
+      FROM bdfichas.dbo.fic_fichas_programadas AS ffp
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_personal_salud AS hps
+          ON hps.idpersonalmedico = ffp.idpersonal
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_cuaderno AS hc
+          ON hc.idCuaderno = ffp.idcuaderno
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_citas AS hhh
+          ON hhh.idcita = ffp.idcita
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_poblacion AS hpn
+          ON hpn.idpoblacion = hhh.idpoblacion
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_establecimiento AS hee
+          ON hee.idestablecimiento = hhh.idestablecimiento
+      WHERE
+          hpn.idpoblacion = @id
+          AND ffp.fip_fecha_ini >= @fecha
+      ORDER BY
+          ffp.fip_fecha_ini ASC;`);
 
     return data.recordsets[0];
   }
@@ -233,5 +237,55 @@ export class FichasMedicinaFalimiarRepository {
       return null;
     }
     return data;
+  }
+  static async getFichaByFecha({ poblacion_id, fecha }) {
+    const pool = await getConnection();
+
+    const fechaSQL = fecha.replaceAll('-', '');
+
+    const data = await pool
+      .request()
+      .input('poblacion_id', sql.Int, poblacion_id)
+      .input('fecha', sql.VarChar(8), fechaSQL).query(`
+      SET LANGUAGE Spanish;
+      SET DATEFORMAT dmy;
+
+      SELECT
+        ffp.*,
+        hc.idpoblacion
+      FROM bdfichas.dbo.fic_fichas_programadas AS ffp
+
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_citas AS hc
+        ON hc.idcita = ffp.idcita
+
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_poblacion AS hp
+        ON hp.idpoblacion = hc.idpoblacion
+
+      WHERE hp.idpoblacion = @poblacion_id
+
+        AND ffp.fip_fecha_ini >= CONVERT(DATETIME, @fecha, 112)
+        AND ffp.fip_fecha_ini < DATEADD(
+          DAY,
+          1,
+          CONVERT(DATETIME, @fecha, 112)
+        );`);
+
+    return data.recordset;
+  }
+  static async removerFicha({ idfichaprogramada, paciente }) {
+    const pool = await getConnection();
+
+    const result = await pool
+      .request()
+      .input('accion', sql.VarChar(1), 'A')
+      .input('idfichaprogramada', sql.Int, idfichaprogramada)
+      .input('paciente', sql.VarChar(100), paciente)
+      .execute('proc_anula_ficha_enlinea');
+
+    if (result.returnValue !== 0) {
+      return null;
+    }
+
+    return result.recordsets[0];
   }
 }

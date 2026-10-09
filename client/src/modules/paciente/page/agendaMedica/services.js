@@ -46,4 +46,15 @@ export class MedicianaFamiliarServices {
       return toServiceError(e);
     }
   }
+  static async getFichaByFecha({ payload }) {
+    try {
+      const response = await api.post(
+        '/usuario/fichas-medicina-familiar/obtener-ficha-por-fecha',
+        payload,
+      );
+      return response.data;
+    } catch (e) {
+      return toServiceError(e);
+    }
+  }
 }

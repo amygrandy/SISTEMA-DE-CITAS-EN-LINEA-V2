@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  CalendarDaysIcon,
-  ClipboardDocumentCheckIcon,
-  ClipboardDocumentListIcon,
+  HeartIcon,
+  SparklesIcon,
+  Squares2X2Icon,
   ArrowLeftIcon,
 } from '@heroicons/react/24/outline';
+
 import ServiceCard from '../../../../components/ServiceCard';
 import SeleccionarPaciente from '../../../../components/SeleccionarPaciente';
 import {
@@ -18,25 +19,24 @@ const servicios = [
     id: 1,
     title: 'Medicina Familiar',
     description: 'Agenda tu cita con tu médico de cabecera',
-    icon: CalendarDaysIcon, // 📅 calendario → agendar
+    icon: HeartIcon,
     variant: 'green',
   },
   {
     id: 2,
     title: 'Odontología',
     description: 'Reserva y gestiona tus citas odontológicas',
-    icon: ClipboardDocumentCheckIcon, // ✅ check → confirmar reserva
+    icon: SparklesIcon,
     variant: 'blue',
   },
-  // {
-  //   id: 3,
-  //   title: 'Especialidades',
-  //   description: 'Consulta el historial de tus citas con especialistas',
-  //   icon: ClipboardDocumentListIcon, // 📋 lista → historial
-  //   variant: 'green',
-  // },
+  {
+    id: 3,
+    title: 'Especialidades',
+    description: 'Agenda tu cita con un especialista',
+    icon: Squares2X2Icon,
+    variant: 'green',
+  },
 ];
-
 export default function EspecialidadesPage() {
   const { closeModal, isModalOpen, modalState, openModal } = useModalManager();
   const navigate = useNavigate();
@@ -108,14 +108,6 @@ export default function EspecialidadesPage() {
             <h1 className="text-3xl font-bold text-slate-700">
               Servicios Disponibles - Seleccione una especialidad
             </h1>
-
-            <div className="mt-4 flex flex-wrap items-center gap-1 text-sm text-slate-700">
-              <span className="font-bold">COCHABAMBA</span>
-
-              <span>|</span>
-
-              <span>CIMFA POLICLINICO QUILLACOLLO</span>
-            </div>
           </div>
           <button
             onClick={() => navigate(-1)}

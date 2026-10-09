@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { MedicianaFamiliarServices } from '../../services';
 import { OdontologiaServices } from '../../odontologia.services';
@@ -37,6 +37,7 @@ const convertirUsuarioWeb = (nombre) => {
 
 export default function SeleccionarFechaHora() {
   const { state } = useLocation();
+  const navigate = useNavigate();
 
   // =========================================================
   // ESTADOS
@@ -58,6 +59,7 @@ export default function SeleccionarFechaHora() {
   const [openModal, setOpenModal] = useState(false);
   //
   const [refreshDisponibilidad, setRefreshDisponibilidad] = useState(0);
+  const [tieneFichas, setTienesFichas] = useState(null);
 
   // =========================================================
   // INFORMACIÓN RECIBIDA
@@ -182,6 +184,24 @@ export default function SeleccionarFechaHora() {
         // Limpiamos horarios anteriores
         setHorarios([]);
         setHoraSeleccionada(null);
+
+        const fichasHoy = await MedicianaFamiliarServices.getFichaByFecha({
+          payload: {
+            poblacion_id: state.idpoblacion,
+            fecha: fechaSeleccionada.fecha,
+          },
+        });
+        if (!fichasHoy.ok) {
+          throw new Error(
+            response.message || 'No se pudo cargar los horarios disponibles',
+          );
+        }
+
+        if (fichasHoy.data.length > 0) {
+          setTienesFichas(fichasHoy.data);
+          toast.info('Ya tiens una ficha asignada para esa fecha');
+          return;
+        }
 
         const response =
           await MedicianaFamiliarServices.getHorariosByFechasByCuaderno({
@@ -360,7 +380,11 @@ export default function SeleccionarFechaHora() {
       setLoadingSave(false);
     }
   };
-
+  const IrProgramaciones = async () => {
+    navigate('/paciente/fichas-programadas', {
+      state: state,
+    });
+  };
   // =========================================================
   // RENDER
   // =========================================================
@@ -745,21 +769,62 @@ export default function SeleccionarFechaHora() {
                 SIN HORARIOS
             ============================================== */
 
-              <div className="mt-5 rounded-2xl border border-dashed border-amber-200 bg-amber-50/50 px-6 py-10 text-center">
-                <ClockIcon className="mx-auto h-9 w-9 text-amber-400" />
+              tieneFichas ? (
+                <div className="mt-5 overflow-hidden rounded-2xl border border-amber-200 bg-white shadow-sm">
+                  <div className="flex items-start gap-4 p-5">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
+                      <ClockIcon className="h-6 w-6" />
+                    </div>
 
-                <p className="mt-3 text-sm font-bold text-slate-700">
-                  No hay horarios disponibles
-                </p>
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="text-sm font-bold text-slate-800">
+                          Ya tienes una ficha programada
+                        </p>
 
-                <p className="mt-1 text-xs text-slate-500">
-                  No existen fichas disponibles para la fecha seleccionada.
-                </p>
+                        <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-amber-700">
+                          Reserva existente
+                        </span>
+                      </div>
 
-                <p className="mt-2 text-xs font-semibold text-[#245249]">
-                  Puedes seleccionar otra fecha.
-                </p>
-              </div>
+                      <p className="mt-2 text-sm leading-5 text-slate-500">
+                        Ya cuentas con una ficha registrada para esta fecha, por
+                        lo que no es posible realizar otra reserva para el mismo
+                        día.
+                      </p>
+
+                      <div className="mt-4 rounded-xl bg-[#f4f8f7] px-4 py-3">
+                        <p className="text-xs font-semibold text-[#245249]">
+                          Selecciona otra fecha disponible para continuar con tu
+                          reserva.
+                        </p>
+                        <button
+                          className="bg-emerald-800 p-3 rounded-2xl text-white hover:bg-emerald-900 mt-5"
+                          onClick={IrProgramaciones}
+                        >
+                          Ir a fichas programadas
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-5 rounded-2xl border border-dashed border-amber-200 bg-amber-50/50 px-6 py-10 text-center">
+                  <ClockIcon className="mx-auto h-9 w-9 text-amber-400" />
+
+                  <p className="mt-3 text-sm font-bold text-slate-700">
+                    No hay horarios disponibles
+                  </p>
+
+                  <p className="mt-1 text-xs text-slate-500">
+                    No existen fichas disponibles para la fecha seleccionada.
+                  </p>
+
+                  <p className="mt-2 text-xs font-semibold text-[#245249]">
+                    Puedes seleccionar otra fecha.
+                  </p>
+                </div>
+              )
             ) : (
               /* =============================================
                 LISTADO DE HORARIOS
