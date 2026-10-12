@@ -4,6 +4,10 @@ import { cupoFichaModel } from '../../../../models/cupoFichas.model.js';
 import { CantidadBeneficiariosRepository } from '../../../admin/cantidadBeneficiarios/cantidadBenecifiarios.respository.js';
 import { FichaWebRepository } from '../../../admin/fichaWeb/fichaWeb.respository.js';
 import { FichaWebModel } from '../../../../models/fichaWeb.model.js';
+import {
+  aumentarUnDia,
+  formatearFechaQuitarGuines,
+} from '../../../../shared/services/funciones.js';
 import { sequelize } from '../../../../config/database.js';
 import { Op } from 'sequelize';
 
@@ -40,6 +44,31 @@ export class ReservarFichaUseCase {
         err.statusCode = 409;
         throw err;
       }
+
+      const cantidadBeneficiarioPorDia =
+        await CantidadBeneficiariosRepository.getById();
+      if (!cantidadBeneficiarioPorDia) {
+        const err = new Error('No se encontro la cantidad de beneficiarios');
+        err.statusCode = 404;
+        throw err;
+      }
+
+      const CantidadBeneficiarios =
+        await FichasMedicinaFalimiarRepository.getCountFichas({
+          matricula_asegurado: codigo_asegurado,
+          fecha_ini: formatearFechaQuitarGuines(fecha),
+          fecha_final: aumentarUnDia(fecha),
+        });
+
+      const limite = cantidadBeneficiarioPorDia.cantidad_ficha_por_asgurado;
+      if (CantidadBeneficiarios.cantidad_fichas >= limite) {
+        const err = new Error(
+          `Solo se pueden sacar ${limite} fichas por día por asegurado`,
+        );
+        err.statusCode = 404;
+        throw err;
+      }
+
       const tieneFichaEseDia = await FichaWebModel.findOne({
         where: {
           fecha,
@@ -50,32 +79,10 @@ export class ReservarFichaUseCase {
         },
         transaction: t,
       });
+
       if (tieneFichaEseDia) {
-        const err = new Error('Ya tienes fichas para ese dia!! mio');
+        const err = new Error('Ya tienes fichas para ese dia!!');
         err.statusCode = 409;
-        throw err;
-      }
-
-      const cantidadBeneficiarioPorDia =
-        await CantidadBeneficiariosRepository.getById();
-      if (!cantidadBeneficiarioPorDia) {
-        const err = new Error('No se encontro la cantidad de beneficiairos');
-        err.statusCode = 404;
-        throw err;
-      }
-
-      const hoyCantidadBeneficiarios =
-        await FichaWebRepository.getCantidadFichasByAsegurado({
-          codigo_asegurado,
-          fecha,
-        });
-
-      const limite = cantidadBeneficiarioPorDia.cantidad_ficha_por_asgurado;
-      if (hoyCantidadBeneficiarios >= limite) {
-        const err = new Error(
-          `Solo se pueden sacar ${limite} fichas por día por asegurado`,
-        );
-        err.statusCode = 404;
         throw err;
       }
 

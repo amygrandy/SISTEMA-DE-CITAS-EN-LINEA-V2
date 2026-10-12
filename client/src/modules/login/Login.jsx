@@ -280,7 +280,6 @@ export default function Login() {
                   <input
                     id="cedula"
                     name="cedula"
-                    type={showCedula ? 'number' : 'password'}
                     autoComplete="current-password"
                     placeholder="INGRESA TU CEDULA"
                     className="h-13 w-full rounded-xl border border-slate-200 bg-slate-50/80 pl-12 pr-13 text-sm font-medium text-slate-800 outline-none transition duration-200 placeholder:font-normal placeholder:text-slate-400 hover:border-slate-300 focus:border-[#24534C] focus:bg-white focus:ring-4 focus:ring-[#24534C]/10"

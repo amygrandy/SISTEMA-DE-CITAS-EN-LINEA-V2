@@ -32,10 +32,6 @@ export const FichaWebModel = sequelize.define(
     matricula: { type: DataTypes.STRING },
 
     estado: { type: DataTypes.ENUM('PENDIENTE', 'CONFIRMADA') },
-    asistio_a_la_cita: {
-      type: DataTypes.ENUM('ASISTIO', 'FALTO', 'POR_ASISTIR'),
-      defaultValue: 'POR_ASISTIR',
-    },
   },
   {
     tableName: 'fichas_web',

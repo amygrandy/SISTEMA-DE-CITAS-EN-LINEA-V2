@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import {
   CalendarDaysIcon,
   ClockIcon,
@@ -14,6 +14,7 @@ import { FichasProgramadasServices as Services } from '../services';
 import { toast } from 'react-toastify';
 import { imprimirFicha } from '../../agendaMedica/especialidades/ficha.pdf';
 import { formatearFechaHoraFicha } from '../../../../../utils/funciones';
+import ConfirmModal from '../../../../../components/ConfirmModal';
 
 const convertirUsuarioWeb = (nombre) => {
   if (!nombre) return '';
@@ -30,15 +31,18 @@ const convertirUsuarioWeb = (nombre) => {
   return `web/${primerNombre}.${primerApellido}`;
 };
 
-export default function HistorialPage() {
+export default function FichasProgramadasPage() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [consultas, setConsutas] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [loadingFicha, setLoadingFicha] = useState(false);
-  const [loadingRemove, setLoadingRemove] = useState(false);
   const [refreshDisponibilidad, setRefreshDisponibilidad] = useState(0);
+  //Remove ficha
+  const [loadingRemove, setLoadingRemove] = useState(false);
+  const [openModalRemove, setOpenModalRemove] = useState(false);
+  const [dataRemove, setDataRemove] = useState(null);
 
   useEffect(() => {
     try {
@@ -106,19 +110,27 @@ export default function HistorialPage() {
     }
   };
 
-  const handleRemoveFicha = async (data) => {
+  const botonRemove = (data) => {
+    setOpenModalRemove(true);
+    setDataRemove(data);
+  };
+  const handleRemoveFicha = async () => {
     try {
       setLoadingRemove(true);
-      const cadena = `${data.cedula_indentidad} ${data.consultorio} ${data.establecimiento} ${data.estado_descripcion} ${data.fecha} ${data.fip_fecha_ini} ${data.hora} ${data.idCuaderno} ${data.idestablecimiento} ${data.idfichaprogramada} ${data.medico} ${data.nombre_paciente} ${data.pac_codigo}`;
+
       const response = await Services.removeFichaProgramada({
-        id: data.idfichaprogramada,
-        payload: { paciente: cadena },
+        id: dataRemove.idfichaprogramada,
       });
       if (!response.ok) {
         throw new Error(response.message || 'No se pudo eliminar la ficha');
       }
+      setOpenModalRemove(false);
       setRefreshDisponibilidad((current) => current + 1);
     } catch (e) {
+      setOpenModalRemove(false);
+      toast.error(
+        e instanceof Error ? e.message : 'Algo salio mal, intentelo mas tarde',
+      );
     } finally {
       setLoadingRemove(false);
     }
@@ -163,42 +175,54 @@ export default function HistorialPage() {
     );
   }
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <BotonVolver
-        onClick={() => {
-          navigate('/paciente');
-        }}
-      >
-        Volver al paciente
-      </BotonVolver>
+    <>
+      {' '}
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+        <BotonVolver
+          onClick={() => {
+            navigate('/paciente');
+          }}
+        >
+          Volver al paciente
+        </BotonVolver>
 
-      <div className="mt-6 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
-        <div>
-          <p className="text-sm font-semibold text-[#005B57]">
-            {state.nombre_completo}
-          </p>
+        <div className="mt-6 flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
+          <div>
+            <p className="text-sm font-semibold text-[#005B57]">
+              {state.nombre_completo}
+            </p>
 
-          <h2 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
-            Programaciones realizadas
-          </h2>
+            <h2 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
+              Programaciones realizadas
+            </h2>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Fichas y atenciones médicas registradas.
-          </p>
+            <p className="mt-2 text-sm text-slate-500">
+              Fichas y atenciones médicas registradas.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="mt-8 space-y-4">
-        <HistorialPaginado
-          consultas={consultas}
-          verFicha={handleFicha}
-          registrosPorPagina={5}
-          loading={loading}
-          loadingFicha={loadingFicha}
-          cancelarFicha={handleRemoveFicha}
-        />
-      </div>
-    </main>
+        <div className="mt-8 space-y-4">
+          <HistorialPaginado
+            consultas={consultas}
+            verFicha={handleFicha}
+            registrosPorPagina={5}
+            loading={loading}
+            loadingFicha={loadingFicha}
+            cancelarFicha={botonRemove}
+          />
+        </div>
+      </main>
+      <ConfirmModal
+        loading={loadingRemove}
+        onClose={() => {
+          setOpenModalRemove(false);
+        }}
+        onConfirm={handleRemoveFicha}
+        open={openModalRemove}
+        type={'cancelarFichaProgramada'}
+      />
+    </>
   );
 }
 

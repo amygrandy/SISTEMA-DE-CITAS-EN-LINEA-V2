@@ -10,6 +10,9 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 
+app.set('trust proxy', true);
+app.set('trust proxy', 'loopback, uniquelocal');
+
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',

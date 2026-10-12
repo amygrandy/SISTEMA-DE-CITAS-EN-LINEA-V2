@@ -60,6 +60,7 @@ export class GetFechasByCuadernoUseCase {
     const fechasHabilitados = obtenerFechasHabilitadas({
       anticipacionDias: DiasAnticipacion, // 1
       diasHabilitados: dias.map((row) => row.dia), //['LUNES']
+      incluirHoy: true,
     });
 
     const fechasConsultorioSIAIS =

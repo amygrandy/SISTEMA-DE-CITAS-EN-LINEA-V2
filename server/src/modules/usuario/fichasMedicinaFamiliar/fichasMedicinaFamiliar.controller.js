@@ -100,8 +100,21 @@ export class FichasMedicinaFamiliarController {
   static async removeFichas(req, res) {
     const data = await RemoveFichasUseCase.execute({
       id: req.validated.params.id,
-      payload: req.validated.body.paciente,
     });
+    // console.log('***************');
+    // console.log(req.ip);
+    // console.log('***************');
+
+    // const clientIp =
+    //   req.headers['x-forwarded-for']?.split(',')[0].trim() ||
+    //   req.headers['x-real-ip'] ||
+    //   req.socket.remoteAddress;
+    // console.log(clientIp);
+
+    console.log('***********');
+    console.log(data);
+    console.log('***********');
+
     return res.status(200).json({
       ok: true,
       message: 'Se elimino correctamente la ficha',

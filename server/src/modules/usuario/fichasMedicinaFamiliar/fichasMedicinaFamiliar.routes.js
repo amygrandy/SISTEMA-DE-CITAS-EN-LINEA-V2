@@ -12,7 +12,6 @@ import {
   HorariasCuadernoSchema,
   reservarFichaSchema,
   fichaByFechaSchema,
-  removeFichasSchema,
 } from './fichasMedicinaFamiliar.schema.js';
 
 const routes = new Router();
@@ -57,7 +56,6 @@ routes
     '/remove-ficha/:id',
     validateRequest({
       paramsSchema: idParamSchema,
-      bodySchema: removeFichasSchema,
     }),
     asyncHandler(FichasMedicinaFamiliarController.removeFichas),
   );

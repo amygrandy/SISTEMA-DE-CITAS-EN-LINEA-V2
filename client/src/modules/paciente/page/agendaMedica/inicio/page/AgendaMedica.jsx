@@ -102,10 +102,6 @@ export default function AgendaMedica() {
 
           <div className="mt-4 flex flex-wrap items-center gap-1 text-sm text-slate-700">
             <span className="font-bold">COCHABAMBA</span>
-
-            <span>|</span>
-
-            <span>CIMFA POLICLINICO QUILLACOLLO</span>
           </div>
         </div>
 

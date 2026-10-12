@@ -2,7 +2,6 @@ import { col, Op } from 'sequelize';
 import { ZodificacionConsultorioModel } from '../../../models/zonificacionConsultorio.model.js';
 import { ConsultorioModel } from '../../../models/consultorio.model.js';
 import { EstablecimientoModel } from '../../../models/establecimiento.model.js';
-import { id } from 'zod/locales';
 
 export class ZonificacionConsultorioRepository {
   static async getAll() {
@@ -158,7 +157,6 @@ export class ZonificacionConsultorioRepository {
 
     return { agregar, eliminar };
   }
-  static async changeStatus() {}
   static async searchCabecera({ consultorio_cabecera_id, transaction = null }) {
     const data = await ZodificacionConsultorioModel.findOne({
       where: {

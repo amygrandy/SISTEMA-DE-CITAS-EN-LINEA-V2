@@ -14,4 +14,18 @@ export class FichaWebRepository {
     });
     return data;
   }
+  static async removeFichaWeb({ id, transaction = null }) {
+    const data = await FichaWebModel.findOne({
+      where: {
+        idfichaprogramada: id,
+      },
+      transaction,
+    });
+    if (!data) {
+      return null;
+    }
+    await data.destroy({ transaction });
+
+    return data;
+  }
 }

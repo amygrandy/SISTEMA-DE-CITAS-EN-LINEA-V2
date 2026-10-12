@@ -54,7 +54,3 @@ export const fichaByFechaSchema = z.object({
   fecha: reqFecha({ label: 'Fecha' }),
   poblacion_id: reqInteger({ label: 'poblacion_id' }),
 });
-
-export const removeFichasSchema = z.object({
-  paciente: reqString({ field: 'Paciente', max: 300 }),
-});

@@ -50,6 +50,17 @@ const modalConfig = {
     iconColor: 'text-emerald-600',
     Icon: CalendarDaysIcon,
   },
+
+  cancelarFichaProgramada: {
+    title: 'Confirmar cancelación de ficha',
+    description:
+      '¿Estás seguro de cancelar esta ficha programada? La ficha quedará liberada y ya no estará reservada para el paciente.',
+    button: 'Sí, cancelar ficha',
+    color: 'bg-red-600 hover:bg-red-700',
+    iconBg: 'bg-red-50',
+    iconColor: 'text-red-600',
+    Icon: CalendarDaysIcon,
+  },
 };
 
 export default function ConfirmModal({

@@ -1,8 +1,10 @@
 import { HistorialRepository } from '../historial.repository.js';
+import { obtenerFechaHoy } from '../../../../shared/services/funciones.js';
 
 export class HistorialUseCase {
   static async execute({ id }) {
-    const data = await HistorialRepository.getHistorial({ id });
+    const hoy = obtenerFechaHoy();
+    const data = await HistorialRepository.getHistorial({ id, fecha: hoy });
 
     const dataNorm = data.map((row) => {
       const { fecha, hora } = separarFechaHora(row.fip_fecha_ini);

@@ -197,3 +197,32 @@ export const formatearFechaDos = (valor) => {
     meses[fecha.getUTCMonth()]
   } del ${fecha.getUTCFullYear()}`;
 };
+
+export const puedeCancelarFicha = ({ fechaFicha, minutos = 30 }) => {
+  const fechaCita = new Date(fechaFicha);
+  const fechaActual = new Date();
+
+  if (Number.isNaN(fechaCita.getTime())) {
+    throw new Error('La fecha de la ficha no es válida');
+  }
+
+  const diferenciaMinutos =
+    (fechaCita.getTime() - fechaActual.getTime()) / (1000 * 60);
+
+  return {
+    puedeCancelar: diferenciaMinutos > minutos,
+    minutosRestantes: Math.max(0, Math.floor(diferenciaMinutos)),
+    fechaLimite: new Date(fechaCita.getTime() - minutos * 60 * 1000),
+  };
+};
+
+export const formatearFechaQuitarGuines = (fecha) => {
+  return fecha.replaceAll('-', '');
+};
+
+export const aumentarUnDia = (fecha) => {
+  const date = new Date(`${fecha}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + 1);
+
+  return date.toISOString().slice(0, 10).replaceAll('-', '');
+};

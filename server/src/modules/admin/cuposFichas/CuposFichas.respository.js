@@ -1,5 +1,5 @@
 import { cupoFichaModel } from '../../../models/cupoFichas.model.js';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 export class CupoFichasRepository {
   static async findOrCreate({
     fecha,
@@ -53,5 +53,30 @@ export class CupoFichasRepository {
     );
 
     return affectedRows;
+  }
+  static async updateLimite({
+    fecha,
+    cuaderno_id,
+    establecimiento_id,
+    transaction = null,
+  }) {
+    const [affectedRows] = await cupoFichaModel.update(
+      {
+        reservas: Sequelize.literal('reservas - 1'),
+      },
+      {
+        where: {
+          fecha,
+          cuaderno_id,
+          establecimiento_id,
+          reservas: {
+            [Op.gt]: 0,
+          },
+        },
+        transaction,
+      },
+    );
+
+    return affectedRows > 0;
   }
 }

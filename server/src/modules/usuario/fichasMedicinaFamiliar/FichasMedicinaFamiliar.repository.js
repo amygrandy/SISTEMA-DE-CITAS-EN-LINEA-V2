@@ -88,7 +88,7 @@ export class FichasMedicinaFalimiarRepository {
       SELECT DISTINCT
           ffpp.fecha
         FROM bdfichas.dbo.fic_fichas_programadas_pantalla ffpp
-        WHERE ffpp.fecha > @fecha_inicial
+        WHERE ffpp.fecha >= @fecha_inicial
           AND ffpp.fecha <= @fecha_final
           AND ffpp.idcuaderno = @idCuaderno
           AND ffpp.idestablecimiento = @idEstablecimiento
@@ -194,11 +194,15 @@ export class FichasMedicinaFalimiarRepository {
           hc.idCuaderno,
           ffp.fip_fecha_ini,
           CASE ffp.fip_estado
-            WHEN 'V' THEN 'Visita a domicilio'
-          WHEN 'D' THEN 'No acude el paciente'
-          WHEN 'M' THEN 'Medico'
-          when 'R' then 'Web'
-              ELSE 'Desconocido'
+          WHEN 'L' THEN 'Libre'
+          WHEN 'A' THEN 'Sacado en vigencia'
+          WHEN 'T' THEN 'Atendido ya tien su consulta'
+          WHEN 'N' THEN 'No atendido Falta'
+          WHEN 'V' THEN 'Visita a domicilio'
+          WHEN 'D' THEN 'No acude el paciente Falta'
+          WHEN 'M' THEN 'Reconsulta Medico'
+          when 'R' then 'Sacado desde la web'
+          ELSE 'Desconocido'
           END AS estado_descripcion,
           LTRIM(RTRIM(hee.est_nombre)) AS establecimiento,
           hee.idestablecimiento ,
@@ -222,6 +226,10 @@ export class FichasMedicinaFalimiarRepository {
           AND ffp.fip_fecha_ini >= @fecha
       ORDER BY
           ffp.fip_fecha_ini ASC;`);
+
+    // console.log('******************');
+    // console.log(data.recordsets[0]);
+    // console.log('****************+');
 
     return data.recordsets[0];
   }
@@ -272,20 +280,122 @@ export class FichasMedicinaFalimiarRepository {
 
     return data.recordset;
   }
-  static async removerFicha({ idfichaprogramada, paciente }) {
+  static async removerFicha({ idfichaprogramada }) {
     const pool = await getConnection();
 
-    const result = await pool
-      .request()
-      .input('accion', sql.VarChar(1), 'A')
-      .input('idfichaprogramada', sql.Int, idfichaprogramada)
-      .input('paciente', sql.VarChar(100), paciente)
-      .execute('proc_anula_ficha_enlinea');
+    try {
+      const request = pool.request();
 
-    if (result.returnValue !== 0) {
+      request.input('i_operacion', sql.Char(1), 'A');
+      request.input('i_idfichaprogramada', sql.Int, idfichaprogramada);
+      request.input('i_datos_eliminador', sql.VarChar(200), 'Desde la web');
+
+      const result = await request.query(`
+      EXEC bdfichas.dbo.proc_anula_ficha_enlinea
+        @i_operacion = @i_operacion,
+        @i_idfichaprogramada = @i_idfichaprogramada,
+        @i_datos_eliminador = @i_datos_eliminador;
+    `);
+
+      // console.log('****************');
+      // console.log(result);
+      // console.log('****************');
+
+      // console.log('Resultado del procedimiento:', {
+      //   returnValue: result.returnValue,
+      //   rowsAffected: result.rowsAffected,
+      //   recordsets: result.recordsets,
+      // });
+      // console.log('Lo que me devuelve');
+      // console.log(result);
+      // console.log('******************');
+      return;
+      // {
+      //   ok: result.returnValue === 0,
+      //   rowsAffected: result.rowsAffected,
+      // }
+    } catch (error) {
+      console.error('Error al ejecutar proc_anula_ficha_enlinea:', {
+        message: error.message,
+        code: error.code,
+        number: error.number,
+        procedure: error.procName,
+        precedingErrors: error.precedingErrors?.map((e) => ({
+          message: e.message,
+          number: e.number,
+          lineNumber: e.lineNumber,
+        })),
+      });
+
+      throw error;
+    }
+  }
+  static async getByIdFicha({ id }) {
+    const pool = await getConnection();
+    const request = pool.request();
+
+    request.input('idfichaprogramada', sql.Int, id);
+
+    const data = await request.query(`
+      SELECT ffp.idfichaprogramada, ffp.fip_fecha_ini as fecha_ini, ffp.fip_hora_fin as hora_fin,
+      LTRIM(RTRIM(hp.pac_numero_historia)) as codigo_asegurado,LTRIM(RTRIM( hp.pac_codigo)) as codigo_matricula, hp.idpoblacion as poblacion_id,
+      hp.pac_documento_id as cedula_identidad, 
+      LTRIM(RTRIM(hp.pac_nombre))+' '+LTRIM(RTRIM(hp.pac_primer_apellido))+' '+LTRIM(RTRIM(hp.pac_segundo_apellido)) as nombre_completo,
+      hc2.idCuaderno as cuaderno_id,LTRIM(RTRIM( hc2.cua_nombre)) as consultorio, hc.idpersonal as personal_id, 
+      he.idestablecimiento as establecimiento_id,LTRIM(RTRIM(he.est_nombre)) as establecieminto,
+      LTRIM(RTRIM(hps.per_nombre)) + ' '+LTRIM(RTRIM(hps.per_campo1))+' '+LTRIM(RTRIM(hps.per_campo2)) as nombre_doctor,
+      CASE ffp.fip_estado
+      WHEN 'L' THEN 'Libre'
+      WHEN 'A' THEN 'Sacado en vigencia'
+      WHEN 'N' THEN 'No atendido Falta'
+      WHEN 'V' THEN 'Visita a domicilio'
+      WHEN 'D' THEN 'No acude el paciente Falta'
+      WHEN 'M' THEN 'Reconsulta Medico'
+      when 'R' then 'Sacado desde la web'
+      ELSE 'Desconocido'
+      END AS origen
+      FROM bdhistoriasclinicas.dbo.hcl_citas hc 
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_cuaderno hc2 on hc.idcuaderno = hc2.idCuaderno 
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_personal_salud hps on hc.idpersonal = hps.idpersonalmedico
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_poblacion hp on hc.idpoblacion = hp.idpoblacion 
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_establecimiento he on hc.idestablecimiento = he.idestablecimiento
+      INNER JOIN bdfichas.dbo.fic_fichas_programadas ffp on ffp.idcita = hc.idcita 
+      WHERE ffp.idfichaprogramada =@idfichaprogramada;`);
+
+    if (data.recordset[0].length == 0) {
       return null;
     }
 
-    return result.recordsets[0];
+    return data.recordset[0];
+  }
+  static async getCountFichas({ matricula_asegurado, fecha_ini, fecha_final }) {
+    const pool = await getConnection();
+    const request = pool.request();
+
+    request.input('matricula', sql.VarChar, matricula_asegurado);
+    request.input('fecha_ini', sql.VarChar, fecha_ini);
+    request.input('fecha_final', sql.VarChar, fecha_final);
+
+    const data = await request.query(`
+      SELECT COUNT(*) AS cantidad_fichas
+      FROM bdhistoriasclinicas.dbo.hcl_poblacion hp
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_citas hc
+          ON hp.idpoblacion = hc.idpoblacion
+      INNER JOIN bdfichas.dbo.fic_fichas_programadas ffp
+          ON ffp.idcita = hc.idcita
+      WHERE hp.pac_numero_historia = @matricula
+        AND ffp.fip_fecha_ini >= @fecha_ini
+        AND ffp.fip_fecha_ini < @fecha_final;
+      `);
+
+    if (data.recordset[0].length == 0) {
+      return null;
+    }
+
+    console.log('********repository*****************');
+    console.log(data.recordset);
+    console.log('*************************');
+
+    return data.recordset[0];
   }
 }
