@@ -19,18 +19,18 @@ export class CreateUseCase {
       err.statusCode = 404;
       throw err;
     }
-    const buscarCabeceraRepetida =
-      await ZonificacionConsultorioRepository.searchCabecera({
-        consultorio_cabecera_id: consultorio_asignado_id,
-      });
+    // const buscarCabeceraRepetida =
+    //   await ZonificacionConsultorioRepository.searchCabecera({
+    //     consultorio_cabecera_id: consultorio_asignado_id,
+    //   });
 
-    if (buscarCabeceraRepetida) {
-      const err = new Error(
-        'El consultorio asignado ya esta en uso y esta asignado a un cosultorio',
-      );
-      err.statusCode = 404;
-      throw err;
-    }
+    // if (buscarCabeceraRepetida) {
+    //   const err = new Error(
+    //     'El consultorio asignado ya esta en uso y esta asignado a un cosultorio',
+    //   );
+    //   err.statusCode = 404;
+    //   throw err;
+    // }
     const buscarConsultorioAsignadoAsignadoEnUso =
       await ZonificacionConsultorioRepository.searchAginadoByArray({
         payload: consultorioCabecera,

@@ -44,6 +44,7 @@ export class ZonificacionConsultorioController {
     const data = await CosultorioByOdontologiaUseCase.execute({
       cuaderno_id: req.validated.params.id,
     });
+
     return res.status(200).json({
       ok: true,
       message: 'Se obtuvo correctamente el consultorio de odontologia',

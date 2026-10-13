@@ -69,22 +69,22 @@ export class ReservarFichaUseCase {
         throw err;
       }
 
-      const tieneFichaEseDia = await FichaWebModel.findOne({
-        where: {
-          fecha,
-          poblacion_id,
-          cuaderno_id,
-          personal_id,
-          establecimiento_id,
-        },
-        transaction: t,
-      });
+      // const tieneFichaEseDia = await FichaWebModel.findOne({
+      //   where: {
+      //     fecha,
+      //     poblacion_id,
+      //     cuaderno_id,
+      //     personal_id,
+      //     establecimiento_id,
+      //   },
+      //   transaction: t,
+      // });
 
-      if (tieneFichaEseDia) {
-        const err = new Error('Ya tienes fichas para ese dia!!');
-        err.statusCode = 409;
-        throw err;
-      }
+      // if (tieneFichaEseDia) {
+      //   const err = new Error('Ya tienes fichas para ese dia!!');
+      //   err.statusCode = 409;
+      //   throw err;
+      // }
 
       //
       const [affectedRows] = await cupoFichaModel.update(
@@ -139,8 +139,6 @@ export class ReservarFichaUseCase {
         },
       );
 
-      await t.commit();
-
       const fichaReservar =
         await FichasMedicinaFalimiarRepository.reservarFicha({
           paciente: poblacion_id,
@@ -161,6 +159,8 @@ export class ReservarFichaUseCase {
 
           descripcionUsuario: 'USUARIO WEB',
         });
+
+      //codigo 0
 
       if (fichaReservar.codigo !== 0) {
         const error = new Error('No se pudo reservar la ficha en SIAIS');

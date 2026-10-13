@@ -8,7 +8,6 @@ export const FichaWebModel = sequelize.define(
     idfichaprogramada: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
     },
     fecha: { type: DataTypes.DATEONLY, allowNull: false },
     fecha_ini: { type: DataTypes.DATE },

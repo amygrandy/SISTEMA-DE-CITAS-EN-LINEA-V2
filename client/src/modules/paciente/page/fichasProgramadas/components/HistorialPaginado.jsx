@@ -163,7 +163,7 @@ function HistorialCard({ consulta, verFicha, cancelarFicha, loadingFicha }) {
             </div>
 
             <p className="mt-1 wrap-break-word text-sm text-slate-500">
-              {consulta?.medico || 'Sin médico registrado'}
+              {consulta?.nombre_medico || 'Sin médico registrado'}
             </p>
           </div>
 

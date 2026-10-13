@@ -35,6 +35,8 @@ export class RemoveFichasUseCase {
         minutos: buscarCantidadBene.tiempo_para_cancelar_ficha,
       });
 
+      // console.log(validacionCancelarFicha);
+
       if (!validacionCancelarFicha.puedeCancelar) {
         const error = new Error(
           `La cancelación debe realizarse con más de ${buscarCantidadBene.tiempo_para_cancelar_ficha} minutos de anticipación.`,

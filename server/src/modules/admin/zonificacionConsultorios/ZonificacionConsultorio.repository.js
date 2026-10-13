@@ -184,7 +184,7 @@ export class ZonificacionConsultorioRepository {
     return data;
   }
   static async consultorioForOndontologia({ cuaderno_id, transaction = null }) {
-    const data = await ZodificacionConsultorioModel.findOne({
+    const data = await ZodificacionConsultorioModel.findAll({
       where: {
         consultorio_cabecera_id: cuaderno_id,
       },
@@ -192,14 +192,25 @@ export class ZonificacionConsultorioRepository {
         {
           model: ConsultorioModel,
           as: 'consultorioAsignado',
+          attributes: [
+            ['idCuaderno', 'value'],
+            ['nombre_consultorio', 'label'],
+          ],
         },
       ],
+
+      nest: true,
+      raw: true,
     });
 
     if (!data) {
       return null;
     }
 
-    return data.toJSON();
+    const consultorios = data
+      .map((item) => item.consultorioAsignado)
+      .filter(Boolean);
+
+    return consultorios;
   }
 }

@@ -36,6 +36,11 @@ import EstablecimientosPage from './modules/paciente/page/Establecimientos/Estab
 import EspecialidadesPage from './modules/paciente/page/agendaMedica/especialidades/page/EspecialidadesPage';
 import SeleccionarFechaHoraPage from './modules/paciente/page/agendaMedica/especialidades/page/SeleccionarFechaHoraPage';
 import SeleccionarHorariosOdontologiaPage from './modules/paciente/page/agendaMedica/especialidades/page/SeleccionarHorariosOdontologiaPage';
+import SeleccionarEspecialidadPage from './modules/paciente/page/agendaMedica/especialidadesDos/pages/SeleccionarEspecialidadPage';
+import EspecialidadFechaHoraPage from './modules/paciente/page/agendaMedica/especialidadesDos/pages/EspecialidadFechaHoraPage';
+//
+import OdontologiaPage from './modules/paciente/page/agendaMedica/odontologia/page/OdontologiaPage';
+//
 import FichasProgramadasPage from './modules/paciente/page/fichasProgramadas/page/FichasProgramadasPage';
 //
 import ParametroGlobales from './modules/parametroGlobales/ParametroGlobales.tab';
@@ -116,11 +121,19 @@ function App() {
                 />
                 <Route
                   path="seleccionar-fecha-odontologia"
-                  element={<SeleccionarHorariosOdontologiaPage />}
+                  element={<OdontologiaPage />}
                 />
                 <Route
                   path="centros-medicos"
                   element={<EstablecimientosPage />}
+                />
+                <Route
+                  path="especialidades-medicas"
+                  element={<SeleccionarEspecialidadPage />}
+                />{' '}
+                <Route
+                  path="citas/especialidad"
+                  element={<EspecialidadFechaHoraPage />}
                 />
               </Route>
             </Route>

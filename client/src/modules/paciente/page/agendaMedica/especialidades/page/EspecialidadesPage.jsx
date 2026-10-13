@@ -81,7 +81,7 @@ export default function EspecialidadesPage() {
         break;
 
       case MODALS.ESPECIALIDADES:
-        navigate('/paciente/seleccionar-fecha-especialidades', {
+        navigate('/paciente/especialidades-medicas', {
           state: {
             ...asegurado,
             tipo: 'ESPECIALIDADES',

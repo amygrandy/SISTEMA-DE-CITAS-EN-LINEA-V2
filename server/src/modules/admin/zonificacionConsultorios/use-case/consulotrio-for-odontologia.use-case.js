@@ -7,9 +7,7 @@ export class CosultorioByOdontologiaUseCase {
       id: cuaderno_id,
     });
     if (!buscarConsultorio) {
-      const err = new Error(
-        'No se encontro el consultorio de medicina familiar',
-      );
+      const err = new Error('No se encontro el consultorio de odontologia');
       err.statusCode = 404;
       throw err;
     }
@@ -17,11 +15,12 @@ export class CosultorioByOdontologiaUseCase {
       await ZonificacionConsultorioRepository.consultorioForOndontologia({
         cuaderno_id,
       });
+
     if (!data) {
       const err = new Error('No tiene asignado un consultorio de odontologia');
       err.statusCode = 404;
       throw err;
     }
-    return data.consultorioAsignado;
+    return data;
   }
 }

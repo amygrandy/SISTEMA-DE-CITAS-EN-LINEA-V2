@@ -47,6 +47,7 @@ export default function FichasProgramadasPage() {
   useEffect(() => {
     try {
       setLoading(true);
+
       const loadLoad = async () => {
         const response = await Services.getFichasProgramadas({
           id: state.idpoblacion,
@@ -74,31 +75,23 @@ export default function FichasProgramadasPage() {
   const handleFicha = async (data) => {
     try {
       setLoadingFicha(true);
-      const response = await Services.getByIdFichaProgramada({
-        id: data.idfichaprogramada,
-      });
-      if (!response.ok) {
-        throw new Error(response.message || 'No se encontro la ficha');
-      }
-
-      const responseData = response.data;
 
       //---
-      const anio = new Date(responseData.fecha).getFullYear();
+      const anio = new Date(data.fecha).getFullYear();
       imprimirFicha({
-        consultorio: responseData.consultorio,
-        direccion: responseData.nombre_doctor,
-        codigo: responseData.codigo,
+        consultorio: data.consultorio,
+        direccion: data.nombre_medico,
+        codigo: `${data.cua_sigla} ${data.fip_numero}`,
 
-        fechaAtencion: responseData.fechaAtencion,
+        fechaAtencion: `${data.fecha} ${data.hora}`,
         // fechaAtencion: '10/09/2026 10:45:00',
 
-        matricula: responseData.matricula,
-        paciente: responseData.nombre_completo,
+        matricula: state.pac_codigo,
+        paciente: state.nombre_completo,
 
-        usuario: convertirUsuarioWeb(responseData.nombre_completo),
+        usuario: convertirUsuarioWeb(state.nombre_completo),
 
-        fechaImpresion: formatearFechaHoraFicha(responseData.updatedAt),
+        fechaImpresion: formatearFechaHoraFicha(data.cit_fecha_reserva),
         año: anio,
       });
     } catch (e) {

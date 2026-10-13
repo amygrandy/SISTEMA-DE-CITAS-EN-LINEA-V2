@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { TipoConsultorioModel } from '../../../models/tipoConsultorio.model.js';
 
 export class TipoConsultorioRepository {
@@ -37,13 +38,12 @@ export class TipoConsultorioRepository {
   }
   static async getSelect() {
     const data = await TipoConsultorioModel.findAll({
-      where: {
-        estado: true,
-      },
+      where: { estado: true },
       attributes: [
         ['id', 'value'],
         ['nombre_tipo', 'label'],
       ],
+      raw: true,
     });
     return data;
   }
@@ -57,6 +57,22 @@ export class TipoConsultorioRepository {
     if (!data) {
       return null;
     }
+    return data;
+  }
+  static async getSelectUsuario() {
+    const data = await TipoConsultorioModel.findAll({
+      where: {
+        estado: true,
+        id: {
+          [Op.notIn]: [1, 2],
+        },
+      },
+      attributes: [
+        ['id', 'value'],
+        ['nombre_tipo', 'label'],
+      ],
+      raw: true,
+    });
     return data;
   }
 }

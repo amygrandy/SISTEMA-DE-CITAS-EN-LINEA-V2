@@ -3,6 +3,7 @@ import { CreateUseCase } from './use-case/create.use-case.js';
 import { UpdateUseCase } from './use-case/update.use-case.js';
 import { ChangeStatusUseCase } from './use-case/change-status.use-case.js';
 import { GetSelectUseCase } from './use-case/get-select.use-case.js';
+import { GetSelectUsuarioUseCase } from './use-case/get-select-usuario.use-case.js';
 
 export class TipoConsultorioController {
   static async getAll(req, res) {
@@ -45,6 +46,14 @@ export class TipoConsultorioController {
   }
   static async getSelect(req, res) {
     const data = await GetSelectUseCase.execute();
+    return res.status(200).json({
+      ok: true,
+      message: 'Se obtuvo correctamente los tipos de consultorio',
+      data,
+    });
+  }
+  static async getSelectUsuario(req, res) {
+    const data = await GetSelectUsuarioUseCase.execute();
     return res.status(200).json({
       ok: true,
       message: 'Se obtuvo correctamente los tipos de consultorio',

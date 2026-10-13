@@ -49,7 +49,7 @@ export async function ConnectBD() {
 
     // await cupoFichaModel.sync({ alter: true });
 
-    await FichaWebModel.sync({ alter: true });
+    await FichaWebModel.sync({ force: true });
     await FichaEliminadaModel.sync({ alter: true });
 
     console.log('✅ SE CARGO CORRECTAMENTE LAS TABLAS');

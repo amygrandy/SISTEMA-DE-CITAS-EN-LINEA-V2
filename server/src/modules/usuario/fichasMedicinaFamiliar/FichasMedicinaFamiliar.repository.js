@@ -185,51 +185,28 @@ export class FichasMedicinaFalimiarRepository {
       SET LANGUAGE Spanish;
       SET DATEFORMAT dmy;
 
-      SELECT TOP 20
-          ffp.idfichaprogramada,
-          LTRIM(RTRIM(hps.per_nombre)) + ' ' +
-          LTRIM(RTRIM(hps.per_campo1)) + ' ' +
-          LTRIM(RTRIM(hps.per_campo2)) AS medico,
-          LTRIM(RTRIM(hc.cua_nombre)) AS consultorio,
-          hc.idCuaderno,
-          ffp.fip_fecha_ini,
-          CASE ffp.fip_estado
-          WHEN 'L' THEN 'Libre'
-          WHEN 'A' THEN 'Sacado en vigencia'
-          WHEN 'T' THEN 'Atendido ya tien su consulta'
-          WHEN 'N' THEN 'No atendido Falta'
-          WHEN 'V' THEN 'Visita a domicilio'
-          WHEN 'D' THEN 'No acude el paciente Falta'
-          WHEN 'M' THEN 'Reconsulta Medico'
-          when 'R' then 'Sacado desde la web'
-          ELSE 'Desconocido'
-          END AS estado_descripcion,
-          LTRIM(RTRIM(hee.est_nombre)) AS establecimiento,
-          hee.idestablecimiento ,
-          LTRIM(RTRIM(hpn.pac_nombre))+' '+LTRIM(RTRIM(hpn.pac_primer_apellido))
-          +' '+ LTRIM(RTRIM(hpn.pac_segundo_apellido )) AS nombre_paciente,
-          hpn.pac_codigo,
-          hpn.pac_documento_id as cedula_indentidad
-      FROM bdfichas.dbo.fic_fichas_programadas AS ffp
-      INNER JOIN bdhistoriasclinicas.dbo.hcl_personal_salud AS hps
-          ON hps.idpersonalmedico = ffp.idpersonal
-      INNER JOIN bdhistoriasclinicas.dbo.hcl_cuaderno AS hc
-          ON hc.idCuaderno = ffp.idcuaderno
-      INNER JOIN bdhistoriasclinicas.dbo.hcl_citas AS hhh
-          ON hhh.idcita = ffp.idcita
-      INNER JOIN bdhistoriasclinicas.dbo.hcl_poblacion AS hpn
-          ON hpn.idpoblacion = hhh.idpoblacion
-      INNER JOIN bdhistoriasclinicas.dbo.hcl_establecimiento AS hee
-          ON hee.idestablecimiento = hhh.idestablecimiento
-      WHERE
-          hpn.idpoblacion = @id
-          AND ffp.fip_fecha_ini >= @fecha
-      ORDER BY
-          ffp.fip_fecha_ini ASC;`);
-
-    // console.log('******************');
-    // console.log(data.recordsets[0]);
-    // console.log('****************+');
+      select top 20 ffp.idfichaprogramada ,LTRIM(RTRIM(hc.cua_nombre)) as consultorio,
+      LTRIM(RTRIM(hps.per_nombre)) +' '+LTRIM(RTRIM(hps.per_campo1))+' '+LTRIM(RTRIM(hps.per_campo2)) as nombre_medico,
+      hc.cua_sigla, ffp.fip_numero, ffp.fip_fecha_ini ,hc2.cit_fecha_reserva,LTRIM(RTRIM(he.est_nombre)) as establecimiento,
+      CASE ffp.fip_estado
+                WHEN 'L' THEN 'Libre'
+                WHEN 'A' THEN 'Sacado en vigencia'
+                WHEN 'T' THEN 'Atendido ya tien su consulta'
+                WHEN 'N' THEN 'No atendido Falta'
+                WHEN 'V' THEN 'Visita a domicilio'
+                WHEN 'D' THEN 'No acude el paciente Falta'
+                WHEN 'M' THEN 'Reconsulta Medico'
+                when 'R' then 'Sacado desde la web'
+                ELSE 'Desconocido'
+                END AS estado_descripcion
+      from bdhistoriasclinicas.dbo.hcl_cuaderno hc 
+      inner join bdhistoriasclinicas.dbo.hcl_citas hc2 on hc2.idcuaderno = hc.idCuaderno 
+      inner join bdfichas.dbo.fic_fichas_programadas ffp on ffp.idcita = hc2.idcita 
+      INNER join bdhistoriasclinicas.dbo.hcl_personal_salud hps on hps.idpersonalmedico= ffp.idpersonal
+      inner join bdhistoriasclinicas.dbo.hcl_poblacion hp on hp.idpoblacion = hc2.idpoblacion 
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = ffp.idestablecimiento  
+      WHERE ffp.fip_fecha_ini >= @fecha
+      and hp.idpoblacion = @id`);
 
     return data.recordsets[0];
   }
@@ -392,9 +369,9 @@ export class FichasMedicinaFalimiarRepository {
       return null;
     }
 
-    console.log('********repository*****************');
-    console.log(data.recordset);
-    console.log('*************************');
+    // console.log('********repository*****************');
+    // console.log(data.recordset);
+    // console.log('*************************');
 
     return data.recordset[0];
   }

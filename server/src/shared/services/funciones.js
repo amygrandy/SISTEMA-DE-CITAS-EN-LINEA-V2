@@ -199,23 +199,44 @@ export const formatearFechaDos = (valor) => {
 };
 
 export const puedeCancelarFicha = ({ fechaFicha, minutos = 30 }) => {
-  const fechaCita = new Date(fechaFicha);
-  const fechaActual = new Date();
+  const fechaOriginal = new Date(fechaFicha);
 
-  if (Number.isNaN(fechaCita.getTime())) {
-    throw new Error('La fecha de la ficha no es válida');
+  if (Number.isNaN(fechaOriginal.getTime())) {
+    throw new Error('Fecha inválida');
   }
 
+  // Corrección temporal SOLO cuando el valor fue
+  // interpretado como UTC, pero originalmente era hora boliviana.
+  const fechaCita = new Date(fechaOriginal.getTime() + 4 * 60 * 60 * 1000);
+
+  const fechaActual = new Date();
+
+  const fechaLimite = new Date(fechaCita.getTime() - minutos * 60 * 1000);
+
   const diferenciaMinutos =
-    (fechaCita.getTime() - fechaActual.getTime()) / (1000 * 60);
+    (fechaCita.getTime() - fechaActual.getTime()) / 60000;
+
+  console.log('Fecha cita:', fechaCita);
+  console.log('Fecha actual:', fechaActual);
+  console.log('Fecha límite:', fechaLimite);
+  console.log('Minutos restantes:', diferenciaMinutos);
 
   return {
-    puedeCancelar: diferenciaMinutos > minutos,
-    minutosRestantes: Math.max(0, Math.floor(diferenciaMinutos)),
-    fechaLimite: new Date(fechaCita.getTime() - minutos * 60 * 1000),
+    puedeCancelar: fechaActual.getTime() < fechaLimite.getTime(),
+
+    minutosRestantes: Math.max(
+      0,
+      Math.ceil((fechaCita.getTime() - fechaActual.getTime()) / 60000),
+    ),
+
+    minutosParaCancelar: Math.max(
+      0,
+      Math.ceil((fechaLimite.getTime() - fechaActual.getTime()) / 60000),
+    ),
+
+    fechaLimite,
   };
 };
-
 export const formatearFechaQuitarGuines = (fecha) => {
   return fecha.replaceAll('-', '');
 };

@@ -138,6 +138,25 @@ export class ConsultorioRepository {
     }
     return data.toJSON();
   }
+  static async getConsultorioByTipoByEstablecimiento({
+    tipo_consultorio_id,
+    establecimiento_id,
+    transaction = null,
+  }) {
+    const data = await ConsultorioModel.findAll({
+      attributes: [
+        ['idCuaderno', 'value'],
+        ['nombre_consultorio', 'label'],
+      ],
+      where: {
+        fk_idestablecimiento: establecimiento_id,
+        tipo_consultorio_id,
+      },
+      transaction,
+      raw: true,
+    });
+    return data;
+  }
   static async changeTipoConsultorio({ id, payload, transaction = null }) {
     const data = await ConsultorioModel.findByPk(id, { transaction });
     if (!data) {
