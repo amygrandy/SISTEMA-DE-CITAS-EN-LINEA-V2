@@ -32,8 +32,13 @@ export const menu = [
     icon: UserGroupIcon,
   },
   {
-    nombre: 'REPORTES',
+    nombre: 'REPORTES CONSULTORIO',
     path: '/admin/reportes/consultorio',
+    icon: UserGroupIcon,
+  },
+  {
+    nombre: 'REPORTES ESTABLECIMIENTO',
+    path: '/admin/reportes/establecimiento',
     icon: UserGroupIcon,
   },
   // {

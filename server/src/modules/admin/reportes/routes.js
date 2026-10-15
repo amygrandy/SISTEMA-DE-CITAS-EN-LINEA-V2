@@ -7,7 +7,7 @@ import {
   idParamSchema,
 } from '../../../middlewares/validateRequest.middlewares.js';
 import { asyncHandler } from '../../../shared/utils/asyncHandler.js';
-import { reporteSchema } from './shema.js';
+import { reporteSchema, reporteEstablecimientoSchema } from './shema.js';
 
 const routes = new Router();
 
@@ -22,6 +22,11 @@ routes
     '/consultorio-medico',
     validateRequest({ bodySchema: reporteSchema }),
     asyncHandler(ReporteController.getAllByConsultorioByMedico),
+  )
+  .post(
+    '/establecimiento-reporte',
+    validateRequest({ bodySchema: reporteEstablecimientoSchema }),
+    asyncHandler(ReporteController.getAllByEstablecimiento),
   );
 
 export default routes;

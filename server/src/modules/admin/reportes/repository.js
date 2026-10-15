@@ -86,4 +86,53 @@ export class ReporteRespository {
       return data.recordset;
     }
   }
+  static async getAllByEstablecimiento({
+    establecimiento_id,
+    fecha_inicial,
+    fecha_final,
+    estado,
+    tipo_cita,
+  }) {
+    const pool = await getConnection();
+
+    const data = await pool
+      .request()
+      .input('establecimiento_id', sql.Int, establecimiento_id)
+      .input('fecha_inicial', sql.VarChar, fecha_inicial)
+      .input('fecha_final', sql.VarChar, fecha_final)
+      .input('estado', sql.VarChar, estado)
+      .input('tipo_cita', sql.VarChar, tipo_cita)
+      .query(`SELECT ffp.fip_fecha_ini ,
+        LTRIM(RTRIM(hp.pac_nombre))+' '+LTRIM(RTRIM(hp.pac_primer_apellido ))+' '+LTRIM(RTRIM(hp.pac_segundo_apellido )) as paciente,
+        LTRIM(RTRIM(hc.cua_nombre)) as consultorio,
+        LTRIM(RTRIM(hps.per_nombre ))+' '+LTRIM(RTRIM(hps.per_campo1))+' '+LTRIM(RTRIM(hps.per_campo2)) as nombre_medico,
+        CASE ffp.fip_estado
+              WHEN 'L' THEN 'Libre'
+              WHEN 'A' THEN 'Ocupado Sacado en vigencia'
+              WHEN 'T' THEN 'Atendido'
+              WHEN 'N' THEN 'No atendido'
+              WHEN 'V' THEN 'Visita a domicilio'
+              WHEN 'D' THEN 'No acude el paciente'
+              WHEN 'M' THEN 'Medico'
+              when 'R' then 'web'
+              ELSE 'Desconocido'
+              END AS estado_descripcion
+        FROM bdfichas.dbo.fic_fichas_programadas ffp 
+        INNER JOIN bdhistoriasclinicas.dbo.hcl_cuaderno hc on hc.idCuaderno = ffp.idcuaderno
+        INNER JOIN bdhistoriasclinicas.dbo.hcl_personal_salud hps on hps.idpersonalmedico = ffp.idpersonal
+        INNER JOIN bdhistoriasclinicas.dbo.hcl_citas hc2 on hc2.idcita = ffp.idcita
+        INNER JOIN bdhistoriasclinicas.dbo.hcl_poblacion hp on hp.idpoblacion = hc2.idpoblacion
+        WHERE 
+        ((@estado = 'ATENDIDOS' AND ffp.fip_estado = 'T')
+        OR
+        (@estado = 'NO ATENDIDOS' AND ffp.fip_estado <> 'T')
+        OR
+        (@estado = 'AMBOS'))
+        AND ffp.idestablecimiento =@establecimiento_id
+        AND hc2.cit_fecha_ini >= @fecha_inicial
+        AND hc2.cit_fecha_ini <  @fecha_final
+        AND hc2.cit_observaciones = @tipo_cita;`);
+
+    return data.recordset;
+  }
 }
