@@ -8,6 +8,7 @@ import ZonificacionConsultorioRoutes from '../../modules/admin/zonificacionConsu
 import HorarioHabilitacionRoutes from '../../modules/admin/horarioHabilitacion/horarioHabilitacion.routes.js';
 import CantidadBeneficiariosRoutes from '../../modules/admin/cantidadBeneficiarios/cantidadBeneficiarios.routes.js';
 import ControlInasistencia from '../../modules/admin/controlInasistencia/controlInasistencia.routes.js';
+import ReportesRoutes from '../../modules/admin/reportes/routes.js';
 
 const routes = new Router();
 
@@ -20,6 +21,7 @@ routes
   .use('/poblacion', PoblacionRoutes)
   .use('/horario-habilitacion', HorarioHabilitacionRoutes)
   .use('/cantidad-beneficiarios', CantidadBeneficiariosRoutes)
-  .use('/control-inasistencia', ControlInasistencia);
+  .use('/control-inasistencia', ControlInasistencia)
+  .use('/reportes', ReportesRoutes);
 
 export default routes;

@@ -45,6 +45,8 @@ import FichasProgramadasPage from './modules/paciente/page/fichasProgramadas/pag
 //
 import ParametroGlobales from './modules/parametroGlobales/ParametroGlobales.tab';
 //
+import ConsultorioPage from './modules/reportes/consultorio/page/ConsultorioPage';
+//
 import AdminLoginPage from './modules/AdminLogin/AdminLoginPage';
 import { AuthProvider } from './context/AuthContext';
 import { AuthProviderAdmin } from './context/AuthContext.admin';
@@ -81,6 +83,10 @@ function App() {
                 <Route
                   path="parametros-globales"
                   element={<ParametroGlobales />}
+                />
+                <Route
+                  path="reportes/consultorio"
+                  element={<ConsultorioPage />}
                 />
               </Route>
             </Route>

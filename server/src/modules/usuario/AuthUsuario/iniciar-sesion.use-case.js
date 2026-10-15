@@ -17,9 +17,11 @@ class IniciarSesionUseCase {
       throw err;
     }
 
-    if (data.cedula_indentidad != contrasenia) {
+    const soloNumeros = data.cedula_indentidad.replace(/\D/g, '');
+
+    if (soloNumeros != contrasenia) {
       const err = new Error(
-        'No se pudo validar sus datos de acces. por favor, dirjase al Servicio de Vigencia de Derechos para la revision de su informacion registrada',
+        'No se pudo validar sus datos de acces. por favor, dirijase al Servicio de Vigencia de Derechos para la revision de su informacion registrada',
       );
       err.statusCode = 409;
       throw err;

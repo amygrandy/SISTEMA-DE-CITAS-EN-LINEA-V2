@@ -1,5 +1,5 @@
     # ─── Etapa base ───────────────────────────────
-FROM node:18.20.8-alpine AS base
+FROM node:18.20.8 AS base
 
 # Define la carpeta de trabajo dentro del contenedor
 WORKDIR /app

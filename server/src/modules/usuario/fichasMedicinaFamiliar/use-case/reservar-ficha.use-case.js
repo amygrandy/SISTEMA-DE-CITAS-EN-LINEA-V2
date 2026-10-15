@@ -36,17 +36,17 @@ export class ReservarFichaUseCase {
 
     try {
       const estaHabilitado =
-        await HorarioHabilitacionRespository.EstaHabilitado();
+        await HorarioHabilitacionRespository.EstaHabilitado({ transaction: t });
       if (!estaHabilitado) {
         const err = new Error(
-          'No se puede sacr ficha fuera el horario de habilitacion',
+          'No se puede sacar ficha fuera el horario de habilitacion',
         );
         err.statusCode = 409;
         throw err;
       }
 
       const cantidadBeneficiarioPorDia =
-        await CantidadBeneficiariosRepository.getById();
+        await CantidadBeneficiariosRepository.getById({ transaction: t });
       if (!cantidadBeneficiarioPorDia) {
         const err = new Error('No se encontro la cantidad de beneficiarios');
         err.statusCode = 404;
@@ -60,14 +60,14 @@ export class ReservarFichaUseCase {
           fecha_final: aumentarUnDia(fecha),
         });
 
-      const limite = cantidadBeneficiarioPorDia.cantidad_ficha_por_asgurado;
-      if (CantidadBeneficiarios.cantidad_fichas >= limite) {
-        const err = new Error(
-          `Solo se pueden sacar ${limite} fichas por día por asegurado`,
-        );
-        err.statusCode = 404;
-        throw err;
-      }
+      // const limite = cantidadBeneficiarioPorDia.cantidad_ficha_por_asgurado;
+      // if (CantidadBeneficiarios.cantidad_fichas >= limite) {
+      //   const err = new Error(
+      //     `Solo se pueden sacar ${limite} fichas por día por asegurado`,
+      //   );
+      //   err.statusCode = 404;
+      //   throw err;
+      // }
 
       // const tieneFichaEseDia = await FichaWebModel.findOne({
       //   where: {
@@ -142,7 +142,7 @@ export class ReservarFichaUseCase {
       const fichaReservar =
         await FichasMedicinaFalimiarRepository.reservarFicha({
           paciente: poblacion_id,
-          idfichaprogramada,
+          idfichaprogramada: 0,
           idMedico: personal_id,
           idEstablecimiento: establecimiento_id,
 
@@ -171,7 +171,7 @@ export class ReservarFichaUseCase {
       await reserva.update({
         estado: 'CONFIRMADA',
       });
-
+      await t.commit();
       return reserva;
     } catch (error) {
       if (!t.finished) {

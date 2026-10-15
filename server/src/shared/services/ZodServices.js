@@ -182,3 +182,16 @@ export const reqDateTimeUTC = ({ label = 'Fecha', required = true } = {}) => {
 
   return schema;
 };
+
+export const reqEnum = ({ valores, label = 'Campo', required = true }) => {
+  const schema = z.enum(valores, {
+    required_error: `Debe seleccionar ${label.toLowerCase()}`,
+    invalid_type_error: `${label} no es válido`,
+  });
+
+  const validacion = schema.refine((value) => valores.includes(value), {
+    message: `${label} debe ser uno de: ${valores.join(', ')}`,
+  });
+
+  return required ? validacion : validacion.optional();
+};

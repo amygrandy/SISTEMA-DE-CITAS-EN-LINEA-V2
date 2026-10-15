@@ -3,18 +3,20 @@ import { reqString } from '../../../shared/services/ZodServices.js';
 
 export const loginSchema = z.object({
   nombre_usuario: reqString({
-    field: 'El nombre de usuario',
+    field: 'La matrícula',
     min: 3,
     max: 30,
-    regex: /^[A-Za-z0-9]+$/,
-    regexMessage: 'El nombre de usuario solo puede contener letras y números',
+    regex: /^[A-Za-z0-9 ]+$/,
+    regexMessage: 'La matrícula solo puede contener letras, números y espacios',
     required: true,
   }),
 
   contrasenia: reqString({
-    field: 'La contraseña',
-    min: 6,
-    max: 100,
+    field: 'La cédula de identidad',
+    min: 5,
+    max: 15,
+    regex: /^[0-9]+$/,
+    regexMessage: 'La cédula de identidad solo puede contener números',
     required: true,
   }),
 });
