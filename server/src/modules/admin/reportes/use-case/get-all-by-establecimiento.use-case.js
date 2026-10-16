@@ -14,18 +14,19 @@ export class GetAllByEstablecimientoUseCase {
     estado,
     tipo_cita,
   }) {
-    let tipo_citaNorm;
-    if (tipo_cita) {
-      tipo_citaNorm = 'Web';
-    } else {
-      tipo_citaNorm = 'Generado desde sistema de Fichas';
-    }
+    console.log({
+      establecimiento_id,
+      fecha_inicial,
+      fecha_final,
+      estado,
+      tipo_cita,
+    });
     const data = await ReporteRespository.getAllByEstablecimiento({
       establecimiento_id,
       estado,
       fecha_final: aumentarUnDia(fecha_final),
       fecha_inicial: formatearFechaQuitarGuines(fecha_inicial),
-      tipo_cita: tipo_citaNorm,
+      tipo_cita: tipo_cita,
     });
 
     return data?.map((row) => {

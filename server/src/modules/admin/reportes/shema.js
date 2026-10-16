@@ -23,12 +23,14 @@ export const reporteSchema = z
       label: 'Fecha final',
     }),
 
-    estado: reqBoolean({
+    estado: reqEnum({
       label: 'Estado',
+      valores: ['ATENDIDOS', 'NO ATENDIDOS', 'AMBOS'],
     }),
 
-    tipo_cita: reqBoolean({
+    tipo_cita: reqEnum({
       label: 'Tipo cita',
+      valores: ['SISTEMAFICHAS', 'WEB', 'AMBOS'],
     }),
   })
   .superRefine((data, ctx) => {
@@ -80,8 +82,9 @@ export const reporteEstablecimientoSchema = z
       valores: ['ATENDIDOS', 'NO ATENDIDOS', 'AMBOS'],
     }),
 
-    tipo_cita: reqBoolean({
+    tipo_cita: reqEnum({
       label: 'Tipo cita',
+      valores: ['SISTEMAFICHAS', 'WEB', 'AMBOS'],
     }),
   })
   .superRefine((data, ctx) => {

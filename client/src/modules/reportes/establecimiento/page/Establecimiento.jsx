@@ -38,8 +38,9 @@ const ESTADOS = [
 ];
 
 const TIPOS_FICHA = [
-  { value: true, label: 'CITAS EN LÍNEA' },
-  { value: false, label: 'SISTEMA DE FICHAS' },
+  { value: 'WEB', label: 'CITAS EN LÍNEA' },
+  { value: 'SISTEMAFICHAS', label: 'SISTEMA DE FICHAS' },
+  { value: 'AMBOS', label: 'AMBOS' },
 ];
 
 // ========================================
@@ -229,9 +230,6 @@ export default function ConsultorioPage() {
         if (!response.ok) {
           throw new Error(response.message || 'No se pudo obtener el reporte');
         }
-        console.log('************');
-        console.log(response);
-        console.log('************');
 
         if (!activo) return;
 

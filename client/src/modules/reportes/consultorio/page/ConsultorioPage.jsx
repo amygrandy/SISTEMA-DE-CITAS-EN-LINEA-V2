@@ -32,15 +32,16 @@ import { EstablecimientoPage as services } from '../services';
 // ========================================
 
 const ESTADOS = [
-  { value: true, label: 'ATENDIDOS' },
-  { value: false, label: 'NO ATENDIDOS' },
+  { value: 'ATENDIDOS', label: 'ATENDIDOS' },
+  { value: 'NO ATENDIDOS', label: 'NO ATENDIDOS' },
+  { value: 'AMBOS', label: 'AMBOS' },
 ];
 
 const TIPOS_FICHA = [
-  { value: true, label: 'CITAS EN LÍNEA' },
-  { value: false, label: 'SISTEMA DE FICHAS' },
+  { value: 'WEB', label: 'CITAS EN LÍNEA' },
+  { value: 'SISTEMAFICHAS', label: 'SISTEMA DE FICHAS' },
+  { value: 'AMBOS', label: 'AMBOS' },
 ];
-
 // ========================================
 // FUNCIONES AUXILIARES
 // ========================================

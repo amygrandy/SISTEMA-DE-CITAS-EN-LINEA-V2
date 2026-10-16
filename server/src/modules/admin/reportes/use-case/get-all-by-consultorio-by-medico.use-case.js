@@ -15,19 +15,13 @@ export class getAllByConsultorioByMedicoUseCase {
     estado,
     tipo_cita,
   }) {
-    let tipo_citaNorm;
-    if (tipo_cita) {
-      tipo_citaNorm = 'Web';
-    } else {
-      tipo_citaNorm = 'Generado desde sistema de Fichas';
-    }
     const data = await ReporteRespository.getAllByConsultorioByMedico({
       consultorio_id,
       establecimiento_id,
       estado,
       fecha_final: aumentarUnDia(fecha_final),
       fecha_inicial: formatearFechaQuitarGuines(fecha_inicial),
-      tipo_cita: tipo_citaNorm,
+      tipo_cita,
     });
 
     return data?.map((row) => {
