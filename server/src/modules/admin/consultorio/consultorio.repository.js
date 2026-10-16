@@ -4,62 +4,78 @@ import { TipoConsultorioModel } from '../../../models/tipoConsultorio.model.js';
 import { EstablecimientoModel } from '../../../models/establecimiento.model.js';
 import { diaSemanaModel } from '../../../models/diaSemana.model.js';
 import { col, Op } from 'sequelize';
+import { api } from '../../../axios/api.js';
+import axios from 'axios';
 
 export class ConsultorioRepository {
   static async getAllSIAIS({ establecimiento_id }) {
-    const pool = await getConnection();
+    //const pool = await getConnection();
     if (!establecimiento_id) {
-      const result = await pool.request().query(
-        `select he.idestablecimiento,LTRIM(RTRIM(he.est_nombre))  as empresa,hc.idCuaderno, LTRIM(RTRIM(hc.cua_nombre)) as consultorio FROM bdhistoriasclinicas.dbo.hcl_cuaderno hc 
-        inner join bdfichas.dbo.fic_cuaderno_sala fcs on hc.idCuaderno = fcs.idcuaderno 
-        inner join bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = fcs.idestablecimiento
-        order by he.est_nombre ;`,
-      );
-      return result.recordsets[0];
+      // const result = await pool.request().query(
+      //   `select he.idestablecimiento,LTRIM(RTRIM(he.est_nombre))  as empresa,hc.idCuaderno, LTRIM(RTRIM(hc.cua_nombre)) as consultorio FROM bdhistoriasclinicas.dbo.hcl_cuaderno hc
+      //   inner join bdfichas.dbo.fic_cuaderno_sala fcs on hc.idCuaderno = fcs.idcuaderno
+      //   inner join bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = fcs.idestablecimiento
+      //   order by he.est_nombre ;`,
+      // );
+      // return result.recordsets[0];
+
+      const response = await axios('/consultorio/0');
+      return response.data;
     } else {
-      const result = await pool
-        .request()
-        .input('establecimiento_id', sql.Int, establecimiento_id)
-        .query(
-          `select he.idestablecimiento,LTRIM(RTRIM(he.est_nombre))  as empresa,hc.idCuaderno, LTRIM(RTRIM(hc.cua_nombre)) as consultorio FROM bdhistoriasclinicas.dbo.hcl_cuaderno hc 
-          inner join bdfichas.dbo.fic_cuaderno_sala fcs on hc.idCuaderno = fcs.idcuaderno 
-          inner join bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = fcs.idestablecimiento
-          WHERE he.idestablecimiento = @establecimiento_id
-          order by he.est_nombre ;`,
-        );
-      return result.recordsets[0];
+      // const result = await pool
+      //   .request()
+      //   .input('establecimiento_id', sql.Int, establecimiento_id)
+      //   .query(
+      //     `select he.idestablecimiento,LTRIM(RTRIM(he.est_nombre))  as empresa,hc.idCuaderno, LTRIM(RTRIM(hc.cua_nombre)) as consultorio FROM bdhistoriasclinicas.dbo.hcl_cuaderno hc
+      //     inner join bdfichas.dbo.fic_cuaderno_sala fcs on hc.idCuaderno = fcs.idcuaderno
+      //     inner join bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = fcs.idestablecimiento
+      //     WHERE he.idestablecimiento = @establecimiento_id
+      //     order by he.est_nombre ;`,
+      //   );
+      // return result.recordsets[0];
+
+      const response = await axios(`/consultorio/${establecimiento_id}`);
+      return response.data;
     }
   }
   static async getIdSIAIS({ consultorio_id }) {
-    const pool = await getConnection();
-    const result = await pool
-      .request()
-      .input('consultorio_id', sql.Int, consultorio_id)
-      .query(
-        `select hc.idCuaderno as value, LTRIM(RTRIM(hc.cua_nombre)) as label FROM bdhistoriasclinicas.dbo.hcl_cuaderno hc 
-          inner join bdfichas.dbo.fic_cuaderno_sala fcs on hc.idCuaderno = fcs.idcuaderno 
-          inner join bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = fcs.idestablecimiento
-          WHERE hc.idCuaderno = @consultorio_id
-          order by he.est_nombre ;`,
-      );
-    return result.recordsets[0][0];
+    //const pool = await getConnection();
+    // const result = await pool
+    //   .request()
+    //   .input('consultorio_id', sql.Int, consultorio_id)
+    //   .query(
+    //     `select hc.idCuaderno as value, LTRIM(RTRIM(hc.cua_nombre)) as label FROM bdhistoriasclinicas.dbo.hcl_cuaderno hc
+    //       inner join bdfichas.dbo.fic_cuaderno_sala fcs on hc.idCuaderno = fcs.idcuaderno
+    //       inner join bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = fcs.idestablecimiento
+    //       WHERE hc.idCuaderno = @consultorio_id
+    //       order by he.est_nombre ;`,
+    //   );
+    // return result.recordsets[0][0];
+
+    const response = await axios(`/consultorio/id/${consultorio_id}`);
+
+    return response.data;
   }
   static async getSelectSIAIS({ establecimiento_id }) {
-    const pool = await getConnection();
+    // const pool = await getConnection();
     if (!establecimiento_id) {
       return [];
     } else {
-      const result = await pool
-        .request()
-        .input('establecimiento_id', sql.Int, establecimiento_id)
-        .query(
-          `select hc.idCuaderno as value, LTRIM(RTRIM(hc.cua_nombre)) as label FROM bdhistoriasclinicas.dbo.hcl_cuaderno hc 
-          inner join bdfichas.dbo.fic_cuaderno_sala fcs on hc.idCuaderno = fcs.idcuaderno 
-          inner join bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = fcs.idestablecimiento
-          WHERE he.idestablecimiento = @establecimiento_id
-          order by he.est_nombre ;`,
-        );
-      return result.recordsets[0];
+      // const result = await pool
+      //   .request()
+      //   .input('establecimiento_id', sql.Int, establecimiento_id)
+      //   .query(
+      //     `select hc.idCuaderno as value, LTRIM(RTRIM(hc.cua_nombre)) as label FROM bdhistoriasclinicas.dbo.hcl_cuaderno hc
+      //     inner join bdfichas.dbo.fic_cuaderno_sala fcs on hc.idCuaderno = fcs.idcuaderno
+      //     inner join bdhistoriasclinicas.dbo.hcl_establecimiento he on he.idestablecimiento = fcs.idestablecimiento
+      //     WHERE he.idestablecimiento = @establecimiento_id
+      //     order by he.est_nombre ;`,
+      //   );
+      // return result.recordsets[0];
+      const response = await api.get(
+        `consultorio/seleccionado/${establecimiento_id}`,
+      );
+      return response.data;
     }
   }
   static async getAll({

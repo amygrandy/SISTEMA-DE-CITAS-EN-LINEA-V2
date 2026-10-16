@@ -375,4 +375,32 @@ export class FichasMedicinaFalimiarRepository {
 
     return data.recordset[0];
   }
+
+  static async cantidadFaltas({ matricula }) {
+    const pool = await getConnection();
+    const request = pool.request();
+
+    request.input('matricula', sql.VarChar, matricula_asegurado);
+    request.input('fecha_ini', sql.VarChar, fecha_ini);
+    request.input('fecha_final', sql.VarChar, fecha_final);
+
+    const data = await request.query(`
+       SELECT COUNT(*) AS total_no_atendidos
+        FROM bdfichas.dbo.fic_fichas_programadas ffp 
+        INNER JOIN bdhistoriasclinicas.dbo.hcl_citas hc on hc.idcita =ffp.idcita
+        INNER JOIN bdhistoriasclinicas.dbo.hcl_poblacion hp on hp.idpoblacion = hc.idpoblacion
+        INNER JOIN bdhistoriasclinicas.dbo.hcl_cuaderno hc2 on hc2.idCuaderno = ffp.idcuaderno 
+        INNER JOIN bdhistoriasclinicas.dbo.hcl_personal_salud hps on hps.idpersonalmedico = ffp.idpersonal 
+        WHERE hp.pac_numero_historia  = @matricula
+        AND ffp.fip_fecha_ini >= @fecha_ini
+        AND ffp.fip_fecha_ini < @fecha_final
+        AND ffp.fip_estado <> 'T';
+      `);
+
+    if (data.recordset[0].length == 0) {
+      return null;
+    }
+
+    return data.recordset[0];
+  }
 }

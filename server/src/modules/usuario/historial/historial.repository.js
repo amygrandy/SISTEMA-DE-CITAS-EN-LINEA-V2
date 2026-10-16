@@ -49,8 +49,6 @@ export class HistorialRepository {
   static async getFichasProgramadas({ id }) {
     const pool = await getConnection();
 
-    console.log('Pasa por aca');
-
     const data = await pool
       .request()
       .input('id', sql.Int, id)
@@ -99,6 +97,29 @@ export class HistorialRepository {
             AND ffp.fip_fecha_ini > @fecha
         ORDER BY
             ffp.fip_fecha_ini ASC;
+      `);
+
+    return data.recordsets[0];
+  }
+  static async getFichasRangoFechas({ matricula, fecha_ini, fecha_final }) {
+    const pool = await getConnection();
+
+    const data = await pool
+      .request()
+      .input('fecha_ini', sql.VarChar, fecha_ini)
+      .input('fecha_final', sql.VarChar, fecha_final)
+      .input('matricula', sql.VarChar, matricula).query(`
+      SELECT RTRIM( hp.pac_nombre)+' '+RTRIM(hp.pac_primer_apellido)+' '+RTRIM(hp.pac_segundo_apellido) as nombre_completo,
+      RTRIM(hc2.cua_nombre ) as consultorio, RTRIM(hps.per_nombre )+' '+RTRIM(hps.per_campo1 )+' '+RTRIM(hps.per_campo2 ) as medico,
+      ffp.fip_fecha_ini,RTRIM(hp.pac_numero_historia) as pac_numero_historia ,RTRIM(hp.pac_codigo) as pac_codigo
+      FROM bdfichas.dbo.fic_fichas_programadas ffp 
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_citas hc on hc.idcita =ffp.idcita
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_poblacion hp on hp.idpoblacion = hc.idpoblacion
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_cuaderno hc2 on hc2.idCuaderno = ffp.idcuaderno 
+      INNER JOIN bdhistoriasclinicas.dbo.hcl_personal_salud hps on hps.idpersonalmedico = ffp.idpersonal 
+      WHERE hp.pac_numero_historia  = @matricula
+      and ffp.fip_fecha_ini >= @fecha_ini
+      and ffp.fip_fecha_ini < @fecha_final;
       `);
 
     return data.recordsets[0];

@@ -151,19 +151,26 @@ export default function SeleccionarFechaHora() {
         setHorarios([]);
         setHoraSeleccionada(null);
 
-        const fichasHoy = await MedicianaFamiliarServices.getFichaByFecha({
-          payload: {
-            poblacion_id: state.idpoblacion,
-            fecha: fechaSeleccionada.fecha,
-          },
+        const fichasHoy = await MedicianaFamiliarServices.getFichasRangoFechas({
+          fecha: fechaSeleccionada.fecha,
         });
+
         if (!fichasHoy.ok) {
           throw new Error(
             response.message || 'No se pudo cargar los horarios disponibles',
           );
         }
 
-        if (fichasHoy.data.length > 0) {
+        // console.log(fichasHoy);
+        // console.log(state);
+        let dataArray = fichasHoy.data.filter(
+          (row) => row.pac_codigo === state.pac_codigo,
+        );
+        // console.log('********');
+        // console.log(dataArray);
+
+        // console.log(dataArray);
+        if (dataArray.length > 0) {
           setTienesFichas(fichasHoy.data);
           toast.info('Ya tiens una ficha asignada para esa fecha');
           return;

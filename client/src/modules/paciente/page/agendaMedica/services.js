@@ -57,4 +57,14 @@ export class MedicianaFamiliarServices {
       return toServiceError(e);
     }
   }
+  static async getFichasRangoFechas({ fecha }) {
+    try {
+      const response = await api.post('/usuario/historial/rangos-fechas ', {
+        fecha_ini: fecha,
+      });
+      return response.data;
+    } catch (e) {
+      return toServiceError(e);
+    }
+  }
 }

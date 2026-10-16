@@ -247,3 +247,46 @@ export const aumentarUnDia = (fecha) => {
 
   return date.toISOString().slice(0, 10).replaceAll('-', '');
 };
+
+// const separarFechaHora = (valor) => {
+//   if (!valor) {
+//     return {
+//       fecha: null,
+//       hora: null,
+//     };
+//   }
+
+//   const fechaISO = valor instanceof Date ? valor.toISOString() : String(valor);
+
+//   const [fecha, tiempo] = fechaISO.split('T');
+
+//   return {
+//     fecha,
+//     hora: tiempo.slice(0, 5),
+//   };
+// };
+
+// export const formatearFechaDos = (valor) => {
+//   if (!valor) return '';
+
+//   const fecha = valor instanceof Date ? valor : new Date(valor);
+
+//   const meses = [
+//     'enero',
+//     'febrero',
+//     'marzo',
+//     'abril',
+//     'mayo',
+//     'junio',
+//     'julio',
+//     'agosto',
+//     'septiembre',
+//     'octubre',
+//     'noviembre',
+//     'diciembre',
+//   ];
+
+//   return `${fecha.getUTCDate()} de ${
+//     meses[fecha.getUTCMonth()]
+//   } del ${fecha.getUTCFullYear()}`;
+// };

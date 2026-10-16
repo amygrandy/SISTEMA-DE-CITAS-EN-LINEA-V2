@@ -18,4 +18,6 @@ export const DEFAULTS = {
     port: Number(process.env.DB_PORT_SQL_SERVER || 1433),
     instanceName: process.env.BD_INSTANCE_NAME || 'SIAIS',
   },
+  BD_SIAIS: process.env.BD_SIAIS || 'http://172.21.65.131:4431/apivb',
+  SIAIS_API_KEY: 'a8f7d2e6-1c24-4a9b-9df7-b5e0a1fae9aa',
 };
